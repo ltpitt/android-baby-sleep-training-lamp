@@ -1,6 +1,7 @@
 package it.davidenastri.littlecloud;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
     }
 
@@ -70,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -83,18 +83,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // Returning the current tab
-            switch (position) {
+
+            switch(position) {
                 case 0:
-                    TabLight tabLight = new TabLight();
-                    return tabLight;
+                    TabLight lightTab = new TabLight();
+                    return lightTab;
                 case 1:
-                    TabSound tabSound = new TabSound();
-                    return tabSound;
+                    TabSound soundTab = new TabSound();
+                    return soundTab;
                 default:
                     return null;
-
             }
+
         }
 
         @Override
@@ -107,9 +107,9 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "LIGHT";
                 case 1:
-                    return "SECTION 2";
+                    return "SOUND";
             }
             return null;
         }
