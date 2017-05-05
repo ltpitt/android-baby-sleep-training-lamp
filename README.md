@@ -1,7 +1,7 @@
-Baby Sleep Training Lamp App
+Little Cloud - Baby Sleep Training Lamp Android App
 ===================================
 
-An Android app to control the DIY Baby Sleep Training lamp
+An Android app to control the DIY Little Cloud Baby Sleep Training Lamp
 
 Pre-requisites
 --------------
