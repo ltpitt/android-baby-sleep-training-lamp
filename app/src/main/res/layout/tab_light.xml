@@ -1,30 +1,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tabLightLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/activity_vertical_margin"
+
     android:orientation="vertical"
     >
 
     <it.davidenastri.littlecloud.ColorPicker
         android:id="@+id/colorPicker"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_margin="8dp"
-        android:layout_marginBottom="24dp"
-        android:id="@+id/fab"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:tint="@color/md_white"
-        app:srcCompat="@drawable/ic_cloud_black_36dp"
-        tools:ignore="VectorDrawableCompat"
-        android:layout_gravity="bottom|right"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         />
+
+    <com.dmitrymalkovich.android.ProgressFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="16dp"
+        android:clickable="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cloud_black_36dp"
+            android:tint="@color/md_white"
+            />
+
+        <ProgressBar
+            android:id="@+id/progressBarLight"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/md_blue_500"
+            android:visibility="invisible"
+            />
+
+    </com.dmitrymalkovich.android.ProgressFloatingActionButton>
 
 
 </LinearLayout>
+    <!--
+        <ProgressBar
+            android:id="@+id/progressBarLight2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:visibility="gone"
+            />
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_marginBottom="24dp"
+            android:id="@+id/fab2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:tint="@color/md_white"
+            app:srcCompat="@drawable/ic_cloud_black_36dp"
+            tools:ignore="VectorDrawableCompat"
+            android:layout_gravity="bottom|right"
+            />
+    -->
