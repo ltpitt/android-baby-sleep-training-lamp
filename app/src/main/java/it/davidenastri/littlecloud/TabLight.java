@@ -1,5 +1,6 @@
 package it.davidenastri.littlecloud;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -42,10 +43,12 @@ public class TabLight extends Fragment{
         final FloatingActionButton floatingActionButton;
 
         colorPicker = (ColorPicker) rootView.findViewById(R.id.colorPicker);
-
         floatingActionButton = (FloatingActionButton) rootView.findViewById(fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
 
+        floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(Color
+                .parseColor("#33691E")));
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(final View v) {
