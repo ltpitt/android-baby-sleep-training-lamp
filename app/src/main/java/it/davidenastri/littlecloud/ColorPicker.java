@@ -42,7 +42,6 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class ColorPicker extends View {
 
@@ -327,7 +326,7 @@ public class ColorPicker extends View {
                 return true;
         }
 
-        Toast.makeText(getContext(), "Color chosen", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Color chosen", Toast.LENGTH_SHORT).show();
         return super.onTouchEvent(event);
     }
 
