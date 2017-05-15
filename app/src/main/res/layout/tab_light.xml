@@ -51,7 +51,9 @@
                 android:id="@+id/fabSleepColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:backgroundTint="@color/md_red_500" />
+                android:src="@drawable/ic_snooze_black_36dp"
+                app:backgroundTint="@color/md_red_500"
+                />
 
             <ProgressBar
                 android:id="@+id/progressBarSleepColor"
@@ -74,6 +76,7 @@
                 android:id="@+id/fabWakeupColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_access_alarm_black_36dp"
                 app:backgroundTint="@color/md_green_500" />
 
             <ProgressBar
