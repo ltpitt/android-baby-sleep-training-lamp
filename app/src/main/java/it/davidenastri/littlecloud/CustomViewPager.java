@@ -15,7 +15,7 @@ public class CustomViewPager extends ViewPager {
 
     public CustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.enabled = true;
+        this.enabled = false;
     }
 
     @Override

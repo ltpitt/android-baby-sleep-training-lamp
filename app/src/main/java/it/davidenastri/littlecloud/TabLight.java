@@ -1,24 +1,14 @@
 package it.davidenastri.littlecloud;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
-
-import cz.msebera.android.httpclient.Header;
 
 import static android.graphics.Color.red;
 import static it.davidenastri.littlecloud.R.id.fab;
@@ -38,137 +28,94 @@ public class TabLight extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.tab_light, container, false);
+
+        // Inflate tab_light layout
+        final View tabLightView = inflater.inflate(R.layout.tab_light, container, false);
 
         final ColorPicker colorPicker;
+        colorPicker = (ColorPicker) tabLightView.findViewById(R.id.colorPicker);
+
         final FloatingActionButton FABcustomColor;
-        final FloatingActionButton FABsleepColor;
-
-
-        colorPicker = (ColorPicker) rootView.findViewById(R.id.colorPicker);
-
-        FABcustomColor = (FloatingActionButton) rootView.findViewById(fab);
-
-        FABsleepColor = (FloatingActionButton) rootView.findViewById(R.id.fabFirstColor);
+        FABcustomColor = (FloatingActionButton) tabLightView.findViewById(fab);
 
         FABcustomColor.setOnClickListener(new View.OnClickListener() {
-
             @Override
-            public void onClick(final View v) {
-
+            public void onClick(final View onClickView) {
                 final ProgressBar spinner;
-                spinner = (ProgressBar)rootView.findViewById(R.id.progressBarLight);
-
+                spinner = (ProgressBar)tabLightView.findViewById(R.id.progressBarLight);
                 // Prevent multiple requests by the user if another request is happening
                 if (spinner.getVisibility() == View.INVISIBLE) {
+                    // Change spinner color
                     spinner.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+                    // Make spinner visible
                     spinner.setVisibility(View.VISIBLE);
-
+                    // Get color from colorpicker
                     int color = colorPicker.getColor();
+                    // Prepare rgbString that will be sent to the lamp
                     String rgbString = red(color) + "," + Color.green(color) + "," +
                             Color.blue(color);
-                    final String colorSet = "Red: " + red(color) + "Green: " + Color.green(color) +
-                            "Blue: " + Color.blue(color);
-                    Log.e("RGB color code is: ", rgbString);
-
-                    // Http call begin
-                    final String PARTICLE_DEVICE_ID = "310031000447353138383138";
-                    final String PARTICLE_TOKEN_ID = "1d89ba47f0c5c9ee72b7ebb12ac171bf5c1f9234";
-                    final String PARTICLE_API_URL = "https://api.particle.io/v1/devices/";
-                    AsyncHttpClient client = new AsyncHttpClient();
-
-                    final RequestParams params = new RequestParams();
-                    params.put("access_token", PARTICLE_TOKEN_ID);
-                    params.put("args", rgbString);
-                    client.post(PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor", params, new TextHttpResponseHandler() {
-
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, String res) {
-                                    // Called when response HTTP status is "200 OK"
-                                    Log.i(LOG_TAG,"Lamp color was successfully changed. Cool! :D");
-                                    Toast.makeText(rootView.getContext(), colorSet, Toast.LENGTH_SHORT).show();
-                                    Snackbar.make(v, "Lamp color changed successfully, yey! :D", Snackbar.LENGTH_LONG).show();
-                                    spinner.setVisibility(View.INVISIBLE);
-                                    FABcustomColor.setBackgroundTintList(ColorStateList.valueOf(Color
-                                            .parseColor("#33691E")));
-
-                                }
-
-                                @Override
-                                public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                                    // Called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                                    Log.e(LOG_TAG, PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params);
-                                    Toast.makeText(rootView.getContext(), PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params, Toast.LENGTH_SHORT).show();
-                                    Snackbar.make(v, "A terrible error prevented lamp color change :(", Snackbar.LENGTH_LONG).show();
-                                    spinner.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                    );
-                    // Http call end
+                    // Prepare a human readable colorSet string for debug
+                    final String colorSet = "Red: " + red(color) + " Green: " + Color.green(color) +
+                            " Blue: " + Color.blue(color);
+                    // Send the http call to change color
+                    ColorChanger.executeQuery(rgbString, colorSet, onClickView, tabLightView, spinner);
                 }
-
             }
 
         } );
 
+        final FloatingActionButton FABsleepColor;
+        FABsleepColor = (FloatingActionButton) tabLightView.findViewById(R.id.fabSleepColor);
 
         FABsleepColor.setOnClickListener(new View.OnClickListener() {
-
             @Override
-            public void onClick(final View v) {
-
+            public void onClick(final View onClickView) {
                 final ProgressBar spinner;
-                spinner = (ProgressBar)rootView.findViewById(R.id.progressBarFirstColor);
-
+                spinner = (ProgressBar)tabLightView.findViewById(R.id.progressBarSleepColor);
                 // Prevent multiple requests by the user if another request is happening
                 if (spinner.getVisibility() == View.INVISIBLE) {
+                    // Change spinner color
                     spinner.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+                    // Make spinner visible
                     spinner.setVisibility(View.VISIBLE);
-
-                    int color = colorPicker.getColor();
+                    // Prepare rgbString that will be sent to the lamp
                     String rgbString = "255,0,0";
-                    final String colorSet = "Red: 255 Green: 255 Blue: 255";
-                    Log.e("RGB color code is: ", rgbString);
-
-                    // Http call begin
-                    final String PARTICLE_DEVICE_ID = "310031000447353138383138";
-                    final String PARTICLE_TOKEN_ID = "1d89ba47f0c5c9ee72b7ebb12ac171bf5c1f9234";
-                    final String PARTICLE_API_URL = "https://api.particle.io/v1/devices/";
-                    AsyncHttpClient client = new AsyncHttpClient();
-
-                    final RequestParams params = new RequestParams();
-                    params.put("access_token", PARTICLE_TOKEN_ID);
-                    params.put("args", rgbString);
-                    client.post(PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor", params, new TextHttpResponseHandler() {
-
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, String res) {
-                                    // Called when response HTTP status is "200 OK"
-                                    Log.i(LOG_TAG,"Lamp color was successfully changed. Cool! :D");
-                                    Toast.makeText(rootView.getContext(), colorSet, Toast.LENGTH_SHORT).show();
-                                    Snackbar.make(v, "Lamp color changed successfully, yey! :D", Snackbar.LENGTH_LONG).show();
-                                    spinner.setVisibility(View.INVISIBLE);
-                                }
-
-                                @Override
-                                public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
-                                    // Called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                                    Log.e(LOG_TAG, PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params);
-                                    Toast.makeText(rootView.getContext(), PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params, Toast.LENGTH_SHORT).show();
-                                    Snackbar.make(v, "A terrible error prevented lamp color change :(", Snackbar.LENGTH_LONG).show();
-                                    spinner.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                    );
-                    // Http call end
+                    // Prepare a human readable colorSet string for debug
+                    final String colorSet = "Red: 255 Green: 0 Blue: 0";
+                    // Send the http call to change color
+                    ColorChanger.executeQuery(rgbString, colorSet, onClickView, tabLightView, spinner);
                 }
 
             }
 
         } );
 
+        final FloatingActionButton FABwakeupColor;
+        FABwakeupColor = (FloatingActionButton) tabLightView.findViewById(R.id.fabWakeupColor);
 
-        return rootView;
+        FABwakeupColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View onClickView) {
+                final ProgressBar spinner;
+                spinner = (ProgressBar)tabLightView.findViewById(R.id.progressBarWakeupColor);
+                // Prevent multiple requests by the user if another request is happening
+                if (spinner.getVisibility() == View.INVISIBLE) {
+                    // Change spinner color
+                    spinner.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+                    // Make spinner visible
+                    spinner.setVisibility(View.VISIBLE);
+                    // Prepare rgbString that will be sent to the lamp
+                    String rgbString = "0,255,0";
+                    // Prepare a human readable colorSet string for debug
+                    final String colorSet = "Red: 0 Green: 255 Blue: 0";
+                    // Send the http call to change color
+                    ColorChanger.executeQuery(rgbString, colorSet, onClickView, tabLightView, spinner);
+                }
 
+            }
+
+        } );
+
+        return tabLightView;
     }
 }
