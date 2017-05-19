@@ -1,18 +1,24 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-tools:context="it.davidenastri.littlecloud.MainActivity">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group android:checkableBehavior="all">
+    <item
+        android:id="@+id/toggle_swipe_scroll"
+        android:titleCondensed="Enable swipe"
+        android:title="Enable swipe scroll"
+        android:icon="@android:drawable/btn_plus">
+    </item>
+    <item
+        android:id="@+id/toggle_color_fader"
+        android:titleCondensed="Enable color"
+        android:title="Enable color fade effect"
+        android:icon="@android:drawable/btn_plus"
+        android:checkable="true">
+    </item>
+</group>
 
-<item
-    android:id="@+id/action_settings"
-    android:title="Test 1"
-    app:showAsAction="never" />
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone" />
 
-<item
-    android:id="@+id/action_delete_all_entries"
-    android:title="Test 2"
-    app:showAsAction="never" />
 </menu>
-
-
-

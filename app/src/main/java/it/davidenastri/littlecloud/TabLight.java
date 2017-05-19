@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,16 @@ public class TabLight extends Fragment{
 
         } );
 
+        FABsleepColor.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                Log.i("Such","a long click!");
+                return true;
+            }
+
+        });
+
         final FloatingActionButton FABwakeupColor;
         FABwakeupColor = (FloatingActionButton) tabLightView.findViewById(R.id.fabWakeupColor);
 
@@ -115,6 +126,16 @@ public class TabLight extends Fragment{
             }
 
         } );
+
+        FABwakeupColor.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                Log.i("Such","a long click!");
+                return true;
+            }
+
+        });
 
         return tabLightView;
     }

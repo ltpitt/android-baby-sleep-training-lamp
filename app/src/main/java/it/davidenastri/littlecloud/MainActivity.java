@@ -1,5 +1,7 @@
 package it.davidenastri.littlecloud;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -65,9 +68,24 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.toggle_swipe_scroll) {
+            // Save data into SharedPrefrences
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("Settings", "Un Mucchio di roba");
+            editor.commit();
             return true;
         }
+
+        if (id == R.id.toggle_color_fader) {
+            // Save data into SharedPrefrences
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            //String SavedPreferences = getResources().getString(0);
+            String value = sharedPref.getString("Name", "");
+            Log.e("Pref",value);
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
