@@ -15,10 +15,10 @@ public class TabSound extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tab_sound, container, false);
+        final View rootView = inflater.inflate(R.layout.tab_sound, container, false);
         return rootView;
-
     }
+
 
 }
 

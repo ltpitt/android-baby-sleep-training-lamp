@@ -19,11 +19,21 @@ android {
     }
 }
 
+// Play / Pause button
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
 dependencies {
     // Http Async Calls
     compile 'com.loopj.android:android-async-http:1.4.9'
     // Circular loading for FAB
     compile 'com.dmitrymalkovich.android:progress-fab:1.6'
+    // Play / Pause button
+    compile 'com.github.recruit-lifestyle:PlayPauseButton:1.0'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

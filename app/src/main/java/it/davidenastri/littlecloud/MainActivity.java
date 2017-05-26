@@ -3,6 +3,7 @@ package it.davidenastri.littlecloud;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import static it.davidenastri.littlecloud.R.id.container;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +47,36 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) { // Meaning the position of the 2nd Fragment
+                    BottomNavigationView menuActionsMain = (BottomNavigationView) findViewById(R.id.menu_actions_main);
+                    menuActionsMain.setVisibility(View.INVISIBLE);
+                    Log.i("Current page","Tab Light");
+                } else if (position == 1) {
+                    BottomNavigationView menuActionsMain = (BottomNavigationView) findViewById(R.id.menu_actions_main);
+                    menuActionsMain.setVisibility(View.VISIBLE);
+                    Log.i("Current page","Tab Sound");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
@@ -56,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_settings_main, menu);
         return true;
     }
 
@@ -89,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     /**
@@ -133,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
-
-
 
     }
 }
