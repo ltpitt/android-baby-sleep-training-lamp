@@ -3,6 +3,7 @@ package it.davidenastri.littlecloud;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,50 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        BottomNavigationView menuActionsMain = (BottomNavigationView) findViewById(R.id.menu_actions_main);
+        if (menuActionsMain != null) {
+            // Set action to perform when any menu-item is selected.
+            menuActionsMain.setOnNavigationItemSelectedListener(
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            int id = item.getItemId();
+                            switch (id){
+                                case R.id.menu_sound_previous:
+                                    Log.i("Action pressed:",item.toString());
+                                    QueryUtils.changeAudio("playPrevious,30",mViewPager);
+                                    break;
+                                case R.id.menu_sound_play:
+                                    Log.i("Il titolo:",item.getTitle().toString());
+                                    if (item.getTitle().toString().contains("Play")) {
+                                        Log.i("Action pressed:", "Ora hai premuto Play");
+                                        QueryUtils.changeAudio("play,30",mViewPager);
+                                        item.setTitle("Pause");
+                                        item.setIcon(getResources().getDrawable(R.drawable.ic_pause_black_24dp));
+                                        break;
+                                    } else if (item.getTitle().toString().contains("Pause")) {
+                                        Log.i("Action pressed:", "Ora hai premuto Pausa");
+                                        QueryUtils.changeAudio("pause,30",mViewPager);
+                                        item.setTitle("Play");
+                                        item.setIcon(getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp));
+                                        break;
+                                    }
+                                    break;
+                                case R.id.menu_sound_next:
+                                    Log.i("Action pressed:",item.toString());
+                                    QueryUtils.changeAudio("playNext,30",mViewPager);
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+        }
+
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

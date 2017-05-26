@@ -59,7 +59,7 @@ public class TabLight extends Fragment{
                     final String colorSet = "Red: " + red(color) + " Green: " + Color.green(color) +
                             " Blue: " + Color.blue(color);
                     // Send the http call to change color
-                    ColorChanger.executeQuery(rgbString, colorSet, onClickView, tabLightView, spinner);
+                    QueryUtils.changeColor(rgbString, colorSet, onClickView, tabLightView, spinner);
                 }
             }
 
@@ -84,7 +84,7 @@ public class TabLight extends Fragment{
                     // Prepare a human readable colorSet string for debug
                     final String colorSet = "Red: 255 Green: 0 Blue: 0";
                     // Send the http call to change color
-                    ColorChanger.executeQuery(rgbString, colorSet, onClickView, tabLightView, spinner);
+                    QueryUtils.changeColor(rgbString, colorSet, onClickView, tabLightView, spinner);
                 }
 
             }
@@ -120,7 +120,7 @@ public class TabLight extends Fragment{
                     // Prepare a human readable colorSet string for debug
                     final String colorSet = "Red: 0 Green: 255 Blue: 0";
                     // Send the http call to change color
-                    ColorChanger.executeQuery(rgbString, colorSet, onClickView, tabLightView, spinner);
+                    QueryUtils.changeColor(rgbString, colorSet, onClickView, tabLightView, spinner);
                 }
 
             }
