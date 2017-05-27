@@ -68,6 +68,7 @@ public final class QueryUtils {
         final RequestParams params = new RequestParams();
         params.put("access_token", PARTICLE_TOKEN_ID);
         params.put("args", commandString);
+        Log.i("Current call:", commandString);
         client.post(PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/dfMini", params, new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String res) {

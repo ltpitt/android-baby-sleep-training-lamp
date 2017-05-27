@@ -2,11 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_sound_previous"
         android:title="Previous"
+        android:checked="false"
         android:icon="@drawable/ic_skip_previous_black_24dp" />
     <item android:id="@+id/menu_sound_play"
         android:title="Play"
+        android:checked="false"
         android:icon="@drawable/ic_play_arrow_black_24dp" />
     <item android:id="@+id/menu_sound_next"
         android:title="Next"
+        android:checked="false"
         android:icon="@drawable/ic_skip_next_black_24dp" />
 </menu>
