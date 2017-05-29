@@ -48,6 +48,8 @@
         android:layout_gravity="bottom"
         app:menu="@menu/menu_actions_main"
         android:visibility="invisible"
+        app:itemIconTint="@color/md_grey_500"
+        app:itemTextColor="@color/md_grey_500"
         />
 
 </android.support.design.widget.CoordinatorLayout>
