@@ -1,6 +1,7 @@
 package it.davidenastri.littlecloud;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                             int id = item.getItemId();
-                            TabSound myTabSound = new TabSound();
+                            TabSoundActivity myTabSound = new TabSoundActivity();
                             switch (id) {
                                 case R.id.menu_sound_previous:
                                     Log.i("Menu item pressed:", item.getTitle().toString());
@@ -155,6 +156,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.open_preferences) {
+            // Open Preferences
+            Intent i = new Intent(this, LittleCloudPreferencesActivity.class);
+            startActivity(i);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -174,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    return new TabLight();
+                    return new TabLightActivity();
                 case 1:
-                    return new TabSound();
+                    return new TabSoundActivity();
                 default:
                     return null;
             }

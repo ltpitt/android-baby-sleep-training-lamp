@@ -13,6 +13,14 @@
         android:icon="@android:drawable/btn_plus"
         android:checkable="true">
     </item>
+    <item
+        android:id="@+id/open_preferences"
+        android:titleCondensed="Enable color"
+        android:title="Preferences"
+        android:checkable="false"
+>
+    </item>
+
 </group>
 
     <EditText

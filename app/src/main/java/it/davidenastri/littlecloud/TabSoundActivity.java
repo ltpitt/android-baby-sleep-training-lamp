@@ -12,7 +12,7 @@ import android.widget.SeekBar;
  * Created by DNastri on 5/3/2017.
  */
 
-public class TabSound extends Fragment{
+public class TabSoundActivity extends Fragment{
 
     public int currentVolume;
 

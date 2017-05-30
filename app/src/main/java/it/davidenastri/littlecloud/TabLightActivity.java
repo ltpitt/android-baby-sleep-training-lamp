@@ -19,12 +19,12 @@ import static it.davidenastri.littlecloud.R.id.fab;
  * Created by DNastri on 5/3/2017.
  */
 
-public class TabLight extends Fragment{
+public class TabLightActivity extends Fragment{
 
     /**
      * Log tag for EditorActivity
      */
-    private static final String LOG_TAG = TabLight.class.getSimpleName();
+    private static final String LOG_TAG = TabLightActivity.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
