@@ -88,7 +88,4 @@ public final class QueryUtils {
             }
         });
     }
-
-
-
 }

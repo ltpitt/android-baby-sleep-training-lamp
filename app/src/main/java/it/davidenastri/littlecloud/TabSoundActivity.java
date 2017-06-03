@@ -56,4 +56,3 @@ public class TabSoundActivity extends Fragment{
         return tabSoundView;
     }
 }
-

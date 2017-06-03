@@ -54,7 +54,7 @@ public class TabLightActivity extends Fragment{
                     int color = colorPicker.getColor();
                     // Prepare rgbString that will be sent to the lamp
                     String rgbString = red(color) + "," + Color.green(color) + "," +
-                            Color.blue(color);
+                            Color.blue(color) + "," + "1000";
                     // Prepare a human readable colorSet string for debug
                     final String colorSet = "Red: " + red(color) + " Green: " + Color.green(color) +
                             " Blue: " + Color.blue(color);
@@ -80,7 +80,7 @@ public class TabLightActivity extends Fragment{
                     // Make spinner visible
                     spinner.setVisibility(View.VISIBLE);
                     // Prepare rgbString that will be sent to the lamp
-                    String rgbString = "255,0,0";
+                    String rgbString = "255,0,0,1000";
                     // Prepare a human readable colorSet string for debug
                     final String colorSet = "Red: 255 Green: 0 Blue: 0";
                     // Send the http call to change color
@@ -116,7 +116,7 @@ public class TabLightActivity extends Fragment{
                     // Make spinner visible
                     spinner.setVisibility(View.VISIBLE);
                     // Prepare rgbString that will be sent to the lamp
-                    String rgbString = "0,255,0";
+                    String rgbString = "0,255,0,1000";
                     // Prepare a human readable colorSet string for debug
                     final String colorSet = "Red: 0 Green: 255 Blue: 0";
                     // Send the http call to change color
