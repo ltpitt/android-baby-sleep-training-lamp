@@ -5,9 +5,9 @@ An Android app to control the DIY [Little Cloud - Baby Sleep Training Lamp](http
 
 A few pics
 --------------
-![Alt text](/screenshots/little_cloud_android_app_light.png?raw=true&s=400 "Little Cloud - App Light")
-![Alt text](/screenshots/little_cloud_android_app_audio.png?raw=true&s=400 "Little Cloud - App Audio")
-<img src="/screenshots/little_cloud_android_app_audio.png" width="100" height="100">
+<img src="/screenshots/little_cloud_android_app_light.png" width="50%">
+<img src="/screenshots/little_cloud_android_app_audio.png" width="50%">
+
 
 Pre-requisites
 --------------
