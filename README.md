@@ -3,7 +3,7 @@ Little Cloud Android App - Baby Sleep Training Lamp
 
 An Android app to control the DIY [Little Cloud - Baby Sleep Training Lamp](https://github.com/ltpitt/c-photon-baby-sleep-training-lamp)
 
-A few pics
+App images
 --------------
 <img src="/screenshots/little_cloud_android_app_light.png" width="25%">
 <img src="/screenshots/little_cloud_android_app_audio.png" width="25%">
