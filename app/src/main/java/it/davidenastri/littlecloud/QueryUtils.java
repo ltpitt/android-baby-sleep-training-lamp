@@ -4,11 +4,11 @@ package it.davidenastri.littlecloud;
  * Created by DNastri on 5/11/2017.
  */
 
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -62,9 +62,9 @@ public final class QueryUtils {
 
     public static void changeAudio(final String commandString, final View onClickView) {
         AsyncHttpClient client = new AsyncHttpClient();
-        final String PARTICLE_DEVICE_ID = "310031000447353138383138";
-        final String PARTICLE_TOKEN_ID = "1d89ba47f0c5c9ee72b7ebb12ac171bf5c1f9234";
-        final String PARTICLE_API_URL = "https://api.particle.io/v1/devices/";
+        final String PARTICLE_DEVICE_ID = "";
+        final String PARTICLE_TOKEN_ID = "";
+        final String PARTICLE_API_URL = "";
         final RequestParams params = new RequestParams();
         params.put("access_token", PARTICLE_TOKEN_ID);
         params.put("args", commandString);
