@@ -31,9 +31,9 @@ public final class QueryUtils {
     public static void changeColor(String rgbString, final String colorSet, final View onClickView,
                                    final View tabLightView, final ProgressBar spinner) {
         AsyncHttpClient client = new AsyncHttpClient();
-        final String PARTICLE_DEVICE_ID = "310031000447353138383138";
-        final String PARTICLE_TOKEN_ID = "1d89ba47f0c5c9ee72b7ebb12ac171bf5c1f9234";
-        final String PARTICLE_API_URL = "https://api.particle.io/v1/devices/";
+        final String PARTICLE_DEVICE_ID = "";
+        final String PARTICLE_TOKEN_ID = "";
+        final String PARTICLE_API_URL = "";
         final RequestParams params = new RequestParams();
         params.put("access_token", PARTICLE_TOKEN_ID);
         params.put("args", rgbString);
