@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             fabButton.setTag(R.id.fab_bg_color, color)
         }
 
-        val previousButton: Button = findViewById(R.id.previous_song_button);
+        val previousButton: ImageButton = findViewById(R.id.previous_song_button);
         val previousButtonClickListener = View.OnClickListener {view ->
             when (view.getId()) {
                 R.id.previous_song_button ->
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
         previousButton.setOnClickListener(previousButtonClickListener);
 
-        val playButton: Button = findViewById(R.id.play_pause_song_button);
+        val playButton: ImageButton = findViewById(R.id.play_pause_song_button);
         val playButtonClickListener = View.OnClickListener {view ->
             when (view.getId()) {
                 R.id.play_pause_song_button ->
@@ -136,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
         playButton.setOnClickListener(playButtonClickListener);
 
-        val nextButton: Button = findViewById(R.id.next_song_button);
+        val nextButton: ImageButton = findViewById(R.id.next_song_button);
         val nextButtonClickListener = View.OnClickListener {view ->
             when (view.getId()) {
                 R.id.next_song_button ->
@@ -179,10 +180,6 @@ class MainActivity : AppCompatActivity() {
                         editor.putString("particleTokenId", editTextParticleTokenId.text.toString())
                         editor.putString("favouriteColor", editTextFavouriteColor.text.toString())
                         editor.apply()
-//                        Log.d("sharedPreference", sharedPreference.getString("particleApiUrl", "defaultName").toString())
-//                        Log.d("sharedPreference", sharedPreference.getString("particleDeviceId", "defaultName").toString())
-//                        Log.d("sharedPreference", sharedPreference.getString("particleTokenId", "defaultName").toString())
-//                        Log.d("sharedPreference", sharedPreference.getString("favouriteColor", "defaultName").toString())
                     }
             }
         }
