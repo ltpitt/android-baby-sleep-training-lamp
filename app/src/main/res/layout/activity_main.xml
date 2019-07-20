@@ -142,7 +142,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:id="@+id/particleApiUrl"
+                android:id="@+id/particle_api_url"
                 android:hint="Particle API Url"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
@@ -153,28 +153,40 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_margin="10dp"
                 android:hint="Particle Device ID"
-                android:id="@+id/particleDeviceId"
+                android:id="@+id/particle_device_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         <EditText
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:id="@+id/particleTokenId"
+                android:id="@+id/particle_token_id"
                 android:hint="Particle Token ID"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        <EditText
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/favourite_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:id="@+id/favouriteColor"
-                android:hint="Your favourite color (HTML code)"
-                android:layout_margin="10dp"
+                android:id="@+id/favourite_color_button"
+        />
+
+        <EditText
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/favourite_color"
+                android:hint="Your favourite color (INT code)"
+                android:layout_margin="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
 
     </LinearLayout>
 

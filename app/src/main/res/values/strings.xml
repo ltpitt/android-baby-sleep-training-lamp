@@ -8,4 +8,5 @@
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="previous_song">Back</string>
+    <string name="favourite_color">Choose your favourite color</string>
 </resources>
