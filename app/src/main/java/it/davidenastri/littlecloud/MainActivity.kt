@@ -5,10 +5,8 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,9 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import top.defaults.colorpicker.ColorPickerView
 import top.defaults.colorpicker.ColorPickerPopup
-import android.app.Activity
-import android.app.PendingIntent.getActivity
-import android.util.Log
 import android.widget.Button
 
 
@@ -37,11 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     fun isColorDark(color: Int): Boolean {
         val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
-        return if (darkness < 0.5) {
-            false // It's a light color
-        } else {
-            true // It's a dark color
-        }
+        return darkness < 0.5
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -55,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 val tagFabIconColor = fabButton.getTag(R.id.fab_icon_color) as Int
                 fabButton.setBackgroundTintList(ColorStateList.valueOf(tagFabBgColor))
                 fabButton.setColorFilter(tagFabIconColor)
-                if (tagLightStatus.equals("lightOn")) {
+                if (tagLightStatus == "lightOn") {
                     fabButton.hide()
                     fabButton.setImageResource(R.drawable.ic_lightbulb_on_black)
                     fabButton.show()
@@ -75,11 +66,11 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_settings -> {
                 val sharedPreference = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-                var editTextParticleApiUrl = findViewById(R.id.particle_api_url) as EditText
-                var editTextParticleDeviceId = findViewById(R.id.particle_device_id) as EditText
-                var editTextParticleTokenId = findViewById(R.id.particle_token_id) as EditText
-                var editTextFavouriteColor = findViewById(R.id.favourite_color) as EditText
-                val buttonFavouriteColor = findViewById(R.id.favourite_color_button) as Button
+                val editTextParticleApiUrl = findViewById<EditText>(R.id.particle_api_url)
+                val editTextParticleDeviceId = findViewById<EditText>(R.id.particle_device_id)
+                val editTextParticleTokenId = findViewById<EditText>(R.id.particle_token_id)
+                val editTextFavouriteColor = findViewById<EditText>(R.id.favourite_color)
+                val buttonFavouriteColor = findViewById<Button>(R.id.favourite_color_button)
                 editTextParticleApiUrl.setText(sharedPreference.getString("particleApiUrl", "defaultName").toString())
                 editTextParticleDeviceId.setText(
                     sharedPreference.getString(
@@ -122,12 +113,13 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         val colorPickerView: ColorPickerView = findViewById(R.id.colorPicker)
-        colorPickerView.setInitialColor(Color.RED);
-        val fabButton: FloatingActionButton = findViewById(R.id.fabButton);
+        colorPickerView.setInitialColor(Color.RED)
+
+        val fabButton: FloatingActionButton = findViewById(R.id.fabButton)
         fabButton.setTag(R.id.light_status, "lightOff")
         fabButton.setTag(R.id.fab_icon_color, Color.BLACK)
         fabButton.setTag(R.id.fab_bg_color, Color.WHITE)
-        colorPickerView.subscribe { color, _, shouldPropagate ->
+        colorPickerView.subscribe { color, _, _ ->
             if (isColorDark(color)) {
                 fabButton.setColorFilter(Color.WHITE)
                 fabButton.setTag(R.id.fab_icon_color, Color.WHITE)
@@ -139,7 +131,7 @@ class MainActivity : AppCompatActivity() {
             fabButton.setTag(R.id.fab_bg_color, color)
         }
 
-        val previousButton: ImageButton = findViewById(R.id.previous_song_button);
+        val previousButton: ImageButton = findViewById(R.id.previous_song_button)
         val previousButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
                 R.id.previous_song_button ->
@@ -147,9 +139,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        previousButton.setOnClickListener(previousButtonClickListener);
+        previousButton.setOnClickListener(previousButtonClickListener)
 
-        val playButton: ImageButton = findViewById(R.id.play_pause_song_button);
+        val playButton: ImageButton = findViewById(R.id.play_pause_song_button)
         val playButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
                 R.id.play_pause_song_button ->
@@ -157,9 +149,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        playButton.setOnClickListener(playButtonClickListener);
+        playButton.setOnClickListener(playButtonClickListener)
 
-        val nextButton: ImageButton = findViewById(R.id.next_song_button);
+        val nextButton: ImageButton = findViewById(R.id.next_song_button)
         val nextButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
                 R.id.next_song_button ->
