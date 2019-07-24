@@ -1,18 +1,14 @@
 package it.davidenastri.littlecloud;
 
-/**
- * Created by DNastri on 5/11/2017.
- */
-
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
-
 import cz.msebera.android.httpclient.Header;
 
 import static com.loopj.android.http.AsyncHttpClient.LOG_TAG;
@@ -29,11 +25,12 @@ public final class QueryUtils {
 
 
     public static void changeColor(String rgbString, final String colorSet, final View onClickView,
-                                   final View tabLightView, final ProgressBar spinner) {
+                                   final ProgressBar spinner) {
         AsyncHttpClient client = new AsyncHttpClient();
-        final String PARTICLE_DEVICE_ID = "";
-        final String PARTICLE_TOKEN_ID = "";
-        final String PARTICLE_API_URL = "";
+        SharedPreferences sharedPreference = onClickView.getContext().getSharedPreferences("SETTINGS", Context.MODE_PRIVATE);
+        final String PARTICLE_DEVICE_ID = sharedPreference.getString("particleDeviceId", "defaultName");
+        final String PARTICLE_TOKEN_ID = sharedPreference.getString("particleTokenId", "defaultName");
+        final String PARTICLE_API_URL = sharedPreference.getString("particleApiUrl", "defaultName");
         final RequestParams params = new RequestParams();
         params.put("access_token", PARTICLE_TOKEN_ID);
         params.put("args", rgbString);
@@ -62,9 +59,10 @@ public final class QueryUtils {
 
     public static void changeAudio(final String commandString, final View onClickView) {
         AsyncHttpClient client = new AsyncHttpClient();
-        final String PARTICLE_DEVICE_ID = "";
-        final String PARTICLE_TOKEN_ID = "";
-        final String PARTICLE_API_URL = "";
+        SharedPreferences sharedPreference = onClickView.getContext().getSharedPreferences("SETTINGS", Context.MODE_PRIVATE);
+        final String PARTICLE_DEVICE_ID = sharedPreference.getString("particleDeviceId", "defaultName");
+        final String PARTICLE_TOKEN_ID = sharedPreference.getString("particleTokenId", "defaultName");
+        final String PARTICLE_API_URL = sharedPreference.getString("particleApiUrl", "defaultName");
         final RequestParams params = new RequestParams();
         params.put("access_token", PARTICLE_TOKEN_ID);
         params.put("args", commandString);
@@ -72,9 +70,9 @@ public final class QueryUtils {
         client.post(PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/dfMini", params, new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String res) {
-                // called when response HTTP status is "200 OK"
-                // Print the chosen audio command to log
-                Log.i(LOG_TAG, commandString);
+                Log.i(LOG_TAG, PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/dfMini  " + params);
+                Log.i(LOG_TAG, "Response code: " + statusCode);
+                Log.i(LOG_TAG, "Response: " + res);
                 //Toast.makeText(tabSoundView.getContext(), colorSet, Toast.LENGTH_SHORT).show();
                 //Snackbar.make(onClickView, "Lamp audio changed successfully, yey! :D", Snackbar.LENGTH_LONG).show();
             }
@@ -82,8 +80,9 @@ public final class QueryUtils {
             @Override
             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                //Log.e(LOG_TAG, PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params);
-                //Toast.makeText(tabSoundView.getContext(), PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params, Toast.LENGTH_SHORT).show();
+                Log.e(LOG_TAG, PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/dfMini  " + params);
+                Log.e(LOG_TAG, "Response code: " + statusCode);
+                Log.e(LOG_TAG, "Response: " + res);
                 Snackbar.make(onClickView, "Little Cloud is offline... :(", Snackbar.LENGTH_LONG).show();
             }
         });

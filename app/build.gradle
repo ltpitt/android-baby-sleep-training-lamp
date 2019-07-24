@@ -23,8 +23,8 @@ android {
     }
 }
 
-// Needed for the Play / Pause button
 repositories {
+    mavenCentral()
     maven {
         url "https://jitpack.io"
     }
@@ -35,9 +35,7 @@ dependencies {
     // Color Picker
     implementation "com.github.duanhong169:colorpicker:1.1.6"
     // Async Calls
-    implementation "com.loopj.android:android-async-http:1.4.9"
-    // Play / Pause button
-    implementation "com.github.recruit-lifestyle:PlayPauseButton:1.0"
+    implementation 'com.loopj.android:android-async-http:1.4.10'
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'

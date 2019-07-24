@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,6 +17,9 @@ import top.defaults.colorpicker.ColorPickerView
 
 
 class MainActivity : AppCompatActivity() {
+
+    private var currentVolume = 0
+    private var isPlaying = false
 
     private fun getSelectedItem(bottomNavigationView: BottomNavigationView): String {
         val menu = bottomNavigationView.menu
@@ -134,8 +136,10 @@ class MainActivity : AppCompatActivity() {
         val previousButton: ImageButton = findViewById(R.id.previous_song_button)
         val previousButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
-                R.id.previous_song_button ->
+                R.id.previous_song_button -> {
+                    //QueryUtils.changeAudio("playPrevious,$currentVolume", view)
                     Snackbar.make(view, "Previous", Snackbar.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -144,8 +148,18 @@ class MainActivity : AppCompatActivity() {
         val playButton: ImageButton = findViewById(R.id.play_pause_song_button)
         val playButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
-                R.id.play_pause_song_button ->
-                    Snackbar.make(view, "Play/Pause", Snackbar.LENGTH_SHORT).show()
+                R.id.play_pause_song_button -> {
+                    if (isPlaying) {
+                        isPlaying = false
+                        playButton.setImageResource(R.drawable.ic_pause_black)
+//                        QueryUtils.changeAudio("pause,$currentVolume", view)
+                    } else {
+                        isPlaying = true
+                        playButton.setImageResource(R.drawable.ic_play_arrow_black)
+//                        QueryUtils.changeAudio("play,$currentVolume", view)
+                    }
+                    //Snackbar.make(view, "Play/Pause", Snackbar.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -154,12 +168,31 @@ class MainActivity : AppCompatActivity() {
         val nextButton: ImageButton = findViewById(R.id.next_song_button)
         val nextButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
-                R.id.next_song_button ->
+                R.id.next_song_button -> {
+//                    QueryUtils.changeAudio("playNext,$currentVolume", view)
                     Snackbar.make(view, "Next", Snackbar.LENGTH_SHORT).show()
+                }
             }
         }
 
         nextButton.setOnClickListener(nextButtonClickListener)
+
+        volumeSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                currentVolume = i;
+                QueryUtils.changeAudio("setVolume,$i", findViewById(R.id.volumeSeekbar))
+                Toast.makeText(applicationContext, "Volume: $i", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // Do something
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // Do something
+            }
+        })
 
         val shortClickListenerFab = View.OnClickListener { view ->
             when (view.getId()) {
@@ -199,6 +232,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         fabButton.setOnClickListener(shortClickListenerFab)
+
+        fabButton.setOnLongClickListener{
+            if (colorPicker.visibility == View.VISIBLE){
+                Toast.makeText(this, "Long click detected", Toast.LENGTH_SHORT).show()
+            }
+            return@setOnLongClickListener true
+        }
 
         val chooseFavouriteColorButton: Button = findViewById(R.id.favourite_color_button)
         val chooseFavouriteColorButtonListener = View.OnClickListener { view ->
