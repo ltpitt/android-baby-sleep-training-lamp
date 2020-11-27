@@ -24,8 +24,7 @@ public final class QueryUtils {
     }
 
 
-    public static void changeColor(String rgbString, final String colorSet, final View onClickView,
-                                   final ProgressBar spinner) {
+    public static void changeColor(String rgbString, final String colorSet, final View onClickView) {
         AsyncHttpClient client = new AsyncHttpClient();
         SharedPreferences sharedPreference = onClickView.getContext().getSharedPreferences("SETTINGS", Context.MODE_PRIVATE);
         final String PARTICLE_DEVICE_ID = sharedPreference.getString("particleDeviceId", "defaultName");
@@ -42,7 +41,7 @@ public final class QueryUtils {
                 Log.i(LOG_TAG, colorSet);
                 //Toast.makeText(tabLightView.getContext(), colorSet, Toast.LENGTH_SHORT).show();
                 //Snackbar.make(onClickView, "Lamp color changed successfully, yey! :D", Snackbar.LENGTH_LONG).show();
-                spinner.setVisibility(View.INVISIBLE);
+                //spinner.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -51,7 +50,7 @@ public final class QueryUtils {
                 Log.e(LOG_TAG, PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params);
                 //Toast.makeText(tabLightView.getContext(), PARTICLE_API_URL + PARTICLE_DEVICE_ID + "/setColor" + params, Toast.LENGTH_SHORT).show();
                 Snackbar.make(onClickView, "Little Cloud is offline... :(", Snackbar.LENGTH_LONG).show();
-                spinner.setVisibility(View.INVISIBLE);
+                //spinner.setVisibility(View.INVISIBLE);
             }
         });
     }

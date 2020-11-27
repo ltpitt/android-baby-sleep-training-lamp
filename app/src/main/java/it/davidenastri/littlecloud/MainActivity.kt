@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -152,11 +151,11 @@ class MainActivity : AppCompatActivity() {
                     if (isPlaying) {
                         isPlaying = false
                         playButton.setImageResource(R.drawable.ic_pause_black)
-//                        QueryUtils.changeAudio("pause,$currentVolume", view)
+                        QueryUtils.changeAudio("pause,$currentVolume", view)
                     } else {
                         isPlaying = true
                         playButton.setImageResource(R.drawable.ic_play_arrow_black)
-//                        QueryUtils.changeAudio("play,$currentVolume", view)
+                        QueryUtils.changeAudio("play,$currentVolume", view)
                     }
                     //Snackbar.make(view, "Play/Pause", Snackbar.LENGTH_SHORT).show()
                 }
@@ -169,8 +168,8 @@ class MainActivity : AppCompatActivity() {
         val nextButtonClickListener = View.OnClickListener { view ->
             when (view.getId()) {
                 R.id.next_song_button -> {
-//                    QueryUtils.changeAudio("playNext,$currentVolume", view)
-                    Snackbar.make(view, "Next", Snackbar.LENGTH_SHORT).show()
+                    QueryUtils.changeAudio("playNext,$currentVolume", view)
+//                    Snackbar.make(view, "Next", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
@@ -180,7 +179,7 @@ class MainActivity : AppCompatActivity() {
         volumeSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                currentVolume = i;
+                currentVolume = i
                 QueryUtils.changeAudio("setVolume,$i", findViewById(R.id.volumeSeekbar))
                 Toast.makeText(applicationContext, "Volume: $i", Toast.LENGTH_SHORT).show()
             }
@@ -195,18 +194,34 @@ class MainActivity : AppCompatActivity() {
         })
 
         val shortClickListenerFab = View.OnClickListener { view ->
-            when (view.getId()) {
+            when (view.id) {
                 R.id.fabButton ->
                     if (getSelectedItem(navView).equals(getString(R.string.title_light))) {
                         // If pressed in Light section
                         val tagLightStatus = fabButton.getTag(R.id.light_status) as String
                         if (tagLightStatus.equals("lightOn")) {
+                            // Prepare rgbString that will be sent to the lamp
+                            val rgbString = "0,0,0,1000"
+                            // Prepare a human readable colorSet string for debug
+                            val colorSet = "Red: 0 Green: 0 Blue: 0"
+                            // Send the http call to change color
+                            QueryUtils.changeColor(rgbString, colorSet, findViewById(R.id.fabButton))
                             Snackbar.make(view, "Turning off...", Snackbar.LENGTH_SHORT).show()
                             fabButton.hide()
                             fabButton.setImageResource(R.drawable.ic_lightbulb_outline_black)
                             fabButton.show()
                             fabButton.setTag(R.id.light_status, "lightOff")
                         } else {
+                            val chosenColor: Int = fabButton.getTag(R.id.fab_bg_color) as Int
+                            val red = Color.red(chosenColor)
+                            val green = Color.green(chosenColor)
+                            val blue = Color.blue(chosenColor)
+                            // Prepare rgbString that will be sent to the lamp
+                            val rgbString = "$red,$green,$blue,1000"
+                            // Prepare a human readable colorSet string for debug
+                            val colorSet = "Red: $red Green: $green Blue: $blue"
+                            // Send the http call to change color
+                            QueryUtils.changeColor(rgbString, colorSet, findViewById(R.id.fabButton))
                             Snackbar.make(view, "Turning on...", Snackbar.LENGTH_SHORT).show()
                             fabButton.hide()
                             fabButton.setImageResource(R.drawable.ic_lightbulb_on_black)
