@@ -1,3 +1,9 @@
+[![GitHub Issues](https://img.shields.io/github/issues-raw/ltpitt/android-baby-sleep-training-lamp)](https://github.com/ltpitt/android-baby-sleep-training-lamp/issues)
+![Total Commits](https://img.shields.io/github/last-commit/ltpitt/android-baby-sleep-training-lamp)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/4w/ltpitt/android-baby-sleep-training-lamp?foo=bar)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
+
 Little Cloud Android App - Baby Sleep Training Lamp
 ===================================
 
