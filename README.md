@@ -1,7 +1,9 @@
+[![build](https://github.com/ltpitt/android-baby-sleep-training-lamp/workflows/build/badge.svg)](https://github.com/ltpitt/android-baby-sleep-training-lamp/actions)
+[![CodeQL](https://github.com/ltpitt/android-baby-sleep-training-lamp/workflows/CodeQL/badge.svg)](https://github.com/ltpitt/android-baby-sleep-training-lamp/actions?query=workflow%3ACodeQL)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/ltpitt/android-baby-sleep-training-lamp)](https://github.com/ltpitt/android-baby-sleep-training-lamp/issues)
-![Total Commits](https://img.shields.io/github/last-commit/ltpitt/android-baby-sleep-training-lamp)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/4w/ltpitt/android-baby-sleep-training-lamp?foo=bar)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Total Commits](https://img.shields.io/github/last-commit/ltpitt/android-baby-sleep-training-lamp)](https://github.com/ltpitt/android-baby-sleep-training-lamp/commits)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/4w/ltpitt/android-baby-sleep-training-lamp?foo=bar)](https://github.com/ltpitt/android-baby-sleep-training-lamp/commits)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ltpitt/android-baby-sleep-training-lamp/blob/master/LICENSE)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 
 Little Cloud Android App - Baby Sleep Training Lamp
