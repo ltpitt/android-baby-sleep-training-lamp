@@ -1,5 +1,4 @@
 [![build](https://github.com/ltpitt/java-spring-cloud-drive/workflows/build/badge.svg)](https://github.com/ltpitt/java-spring-cloud-drive/actions?query=workflow%3AAndroid%20CI)
-[![CodeQL](https://github.com/ltpitt/android-baby-sleep-training-lamp/workflows/CodeQL/badge.svg)](https://github.com/ltpitt/android-baby-sleep-training-lamp/actions?query=workflow%3ACodeQL)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/ltpitt/android-baby-sleep-training-lamp)](https://github.com/ltpitt/android-baby-sleep-training-lamp/issues)
 [![Total Commits](https://img.shields.io/github/last-commit/ltpitt/android-baby-sleep-training-lamp)](https://github.com/ltpitt/android-baby-sleep-training-lamp/commits)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/4w/ltpitt/android-baby-sleep-training-lamp?foo=bar)](https://github.com/ltpitt/android-baby-sleep-training-lamp/commits)
