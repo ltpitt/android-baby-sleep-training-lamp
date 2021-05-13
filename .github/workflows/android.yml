@@ -12,10 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Remove File
-      uses: JesseTG/rm@v1.0.2
-      with:
-        path: local.properties
     - uses: actions/checkout@v2
     - name: set up JDK 11
       uses: actions/setup-java@v2
