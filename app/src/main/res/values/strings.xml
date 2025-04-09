@@ -9,4 +9,14 @@
     <string name="pause">Pause</string>
     <string name="previous_song">Back</string>
     <string name="favourite_color">Choose your favourite color</string>
+    <string name="particle_api_url">Insert your Particle API Url</string>
+    <string name="particle_device_id">Insert your Particle Device ID</string>
+    <string name="particle_token_id">Insert your Particle Token ID</string>
+    <string name="skip_previous_image">skip_previous_image</string>
+    <string name="cloud_sleep_tight_image">cloud_sleep_tight_image</string>
+    <string name="play_image">play_image</string>
+    <string name="skip_next_image">skip_next_image</string>
+    <string name="volume_up_image">volume_up_image</string>
+    <string name="floating_action_button">floating_action_button</string>
+    <string name="your_favourite_color_int_code">Your favourite color (INT code)</string>
 </resources>

@@ -9,7 +9,7 @@
         tools:context=".MainActivity">
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
                   android:id="@+id/musicPlayer"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
@@ -21,10 +21,10 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cloud_sleep_tight"/>
+                android:background="@drawable/cloud_sleep_tight"
+            android:contentDescription="@string/cloud_sleep_tight_image" />
 
         <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -35,39 +35,41 @@
                     android:id="@+id/previous_song_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                android:contentDescription="@string/skip_previous_image"
+                android:padding="10dp"
                     android:src="@drawable/ic_skip_previous_black"
                     android:background="?android:attr/selectableItemBackground"
-                    android:tint="#FFFFFF"
-                    android:layout_weight="1"
-            />
+                android:layout_weight="1"
+                app:tint="#FFFFFF" />
 
 
             <ImageButton
                     android:id="@+id/play_pause_song_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                android:contentDescription="@string/play_image"
+                android:padding="10dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:src="@drawable/ic_play_arrow_black"
-                    android:tint="#FFFFFF"
-                    android:layout_weight="1"/>
+                android:layout_weight="1"
+                app:tint="#FFFFFF" />
 
 
             <ImageButton
                     android:id="@+id/next_song_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                android:contentDescription="@string/skip_next_image"
+                android:padding="10dp"
                     android:src="@drawable/ic_skip_next_black"
                     android:background="?android:attr/selectableItemBackground"
-                    android:tint="#FFFFFF"
-                    android:layout_weight="1"/>
+                android:layout_weight="1"
+                app:tint="#FFFFFF" />
 
         </LinearLayout>
 
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingBottom="@dimen/activity_vertical_margin"
@@ -81,16 +83,14 @@
                     android:layout_height="30dp"
                     android:layout_alignBaseline="@+id/imgVolume"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@+id/volumeText"
-                    android:layout_toRightOf="@+id/imgVolume"
+                    android:layout_toEndOf="@+id/imgVolume"
                     android:max="30"/>
 
             <TextView
                     android:id="@+id/volumeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -98,11 +98,11 @@
                     android:id="@+id/imgVolume"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/volumeText"
                     android:background="@drawable/ic_volume_up_black"
-                    android:backgroundTint="@color/md_grey_500"/>
+                    android:backgroundTint="@color/md_grey_500"
+                android:contentDescription="@string/volume_up_image" />
 
         </RelativeLayout>
 
@@ -120,7 +120,8 @@
             app:layout_constraintBottom_toTopOf="@+id/nav_view" app:layout_constraintVertical_bias="0.304"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            app:elevation="6dp"
+        android:contentDescription="@string/floating_action_button"
+        app:elevation="6dp"
             app:borderWidth="0dp"
             android:id="@+id/fabButton"
             android:tint="@android:color/white"
@@ -132,36 +133,42 @@
             android:layout_marginBottom="56dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
                   android:visibility="gone"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:orientation="vertical"
                   android:id="@+id/settingsForm" app:layout_constraintBottom_toBottomOf="parent">
         <EditText
-                app:layout_constraintBottom_toBottomOf="parent"
+            android:autofillHints="@string/particle_api_url"
+            android:inputType="textUri"
+            app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:id="@+id/particle_api_url"
-                android:hint="Particle API Url"
+                android:hint="@string/particle_api_url"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         <EditText
-                app:layout_constraintBottom_toBottomOf="parent"
+            android:autofillHints="@string/particle_device_id"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_margin="10dp"
-                android:hint="Particle Device ID"
+                android:hint="@string/particle_device_id"
                 android:id="@+id/particle_device_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         <EditText
-                app:layout_constraintBottom_toBottomOf="parent"
+            android:autofillHints="@string/particle_token_id"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:id="@+id/particle_token_id"
-                android:hint="Particle Token ID"
+                android:hint="@string/particle_token_id"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -177,12 +184,14 @@
         />
 
         <EditText
-                android:visibility="gone"
+            android:autofillHints="@string/your_favourite_color_int_code"
+            android:inputType="number"
+            android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:id="@+id/favourite_color"
-                android:hint="Your favourite color (INT code)"
+                android:hint="@string/your_favourite_color_int_code"
                 android:layout_margin="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
