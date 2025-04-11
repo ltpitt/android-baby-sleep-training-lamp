@@ -353,6 +353,7 @@ class MainActivity : AppCompatActivity() {
             when (view.id) {
                 R.id.previous_song_button -> {
                     Toast.makeText(view.context, "Previous", Toast.LENGTH_SHORT).show()
+                    QueryUtils.changeAudio("previous,$currentVolume", view)
                 }
             }
         }
