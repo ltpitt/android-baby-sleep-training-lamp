@@ -15,6 +15,7 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import it.davidenastri.littlecloud.databinding.ActivityMainBinding
 
 
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         return darkness > 0.5
     }
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onNavigationItemSelectedListener = NavigationBarView.OnItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_light -> {
                 handleLightNavigation()
@@ -60,6 +61,11 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
     }
+
+    private fun setupNavigation() {
+        binding.navView.setOnItemSelectedListener(onNavigationItemSelectedListener)
+    }
+
 
     private fun handleSettingsNavigation() {
         val sharedPreferences = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
@@ -87,6 +93,10 @@ class MainActivity : AppCompatActivity() {
             setupField(particleApiUrlField, defaultParticleApiUrl)
             setupField(particleDeviceIdField, defaultParticleDeviceId)
             setupField(particleTokenIdField, defaultParticleTokenId)
+
+            updateTextColor(particleApiUrlField, defaultParticleApiUrl)
+            updateTextColor(particleDeviceIdField, defaultParticleDeviceId)
+            updateTextColor(particleTokenIdField, defaultParticleTokenId)
 
             val favouriteColorValue = sharedPreferences.getString("favouriteColor", "")
             favouriteColorValue?.let {
@@ -197,9 +207,6 @@ class MainActivity : AppCompatActivity() {
         setupVolumeSeekbar()
     }
 
-    private fun setupNavigation() {
-        binding.navView.setOnItemSelectedListener(onNavigationItemSelectedListener)
-    }
 
     private fun setupColorPicker() {
         binding.colorPicker.setInitialColor(Color.RED)
@@ -274,6 +281,9 @@ class MainActivity : AppCompatActivity() {
     private fun turnOffLight(view: View) {
         val rgbString = "0,0,0,1000"
         val colorSet = "Red: 0 Green: 0 Blue: 0"
+        Log.d("rgbString", rgbString)
+        Log.d("colorSet", colorSet)
+        QueryUtils.changeColor(rgbString, colorSet, view)
         showToast(view.context, "Turning off...")
         updateFabButton(R.drawable.ic_lightbulb_outline_black, "lightOff")
     }
@@ -285,6 +295,9 @@ class MainActivity : AppCompatActivity() {
         val blue = Color.blue(chosenColor)
         val rgbString = "$red,$green,$blue,1000"
         val colorSet = "Red: $red Green: $green Blue: $blue"
+        Log.d("rgbString", rgbString)
+        Log.d("colorSet", colorSet)
+        QueryUtils.changeColor(rgbString, colorSet, view)
         showToast(view.context, "Turning on...")
         updateFabButton(R.drawable.ic_lightbulb_on_black, "lightOn")
     }
@@ -351,12 +364,12 @@ class MainActivity : AppCompatActivity() {
                         isPlaying = false
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_pause_black)
                         Toast.makeText(view.context, "Pause", Toast.LENGTH_SHORT).show()
-                        //QueryUtils.changeAudio("pause,$currentVolume", view)
+                        QueryUtils.changeAudio("pause,$currentVolume", view)
                     } else {
                         isPlaying = true
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_play_arrow_black)
                         Toast.makeText(view.context, "Play", Toast.LENGTH_SHORT).show()
-                        //QueryUtils.changeAudio("play,$currentVolume", view)
+                        QueryUtils.changeAudio("play,$currentVolume", view)
                     }
                 }
             }
@@ -366,7 +379,7 @@ class MainActivity : AppCompatActivity() {
             when (view.id) {
                 R.id.next_song_button -> {
                     Toast.makeText(view.context, "Next", Toast.LENGTH_SHORT).show()
-                    //QueryUtils.changeAudio("playNext,$currentVolume", view)
+                    QueryUtils.changeAudio("playNext,$currentVolume", view)
                 }
             }
         }
@@ -376,7 +389,7 @@ class MainActivity : AppCompatActivity() {
         binding.volumeSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 currentVolume = i
-                // QueryUtils.changeAudio("setVolume,$i", binding.volumeSeekbar)
+                QueryUtils.changeAudio("setVolume,$i", binding.volumeSeekbar)
                 Toast.makeText(applicationContext, "Volume: $i", Toast.LENGTH_SHORT).show()
             }
 
