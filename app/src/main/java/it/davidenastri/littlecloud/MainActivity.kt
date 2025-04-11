@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private var currentVolume = 0
     private var isPlaying = false
     private var lastFabButtonClickTime: Long = 0
-    private val debounceInterval: Long = 1000
+    private val debounceInterval: Long = 2000
 
     private fun getSelectedItem(bottomNavigationView: BottomNavigationView): String {
         val menu = bottomNavigationView.menu
@@ -63,26 +64,35 @@ class MainActivity : AppCompatActivity() {
     private fun handleSettingsNavigation() {
         val sharedPreferences = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         with(binding) {
-            val defaultApiUrl = getString(R.string.particle_api_url)
-            val defaultDeviceId = getString(R.string.particle_device_id)
-            val defaultTokenId = getString(R.string.particle_token_id)
+            val defaultParticleApiUrl = getString(R.string.particle_api_url)
+            val defaultParticleDeviceId = getString(R.string.particle_device_id)
+            val defaultParticleTokenId = getString(R.string.particle_token_id)
             val defaultFavouriteColor = getString(R.string.favourite_color)
 
-            particleApiUrl.setText(sharedPreferences.getString("particle_api_url", ""))
-            particleDeviceId.setText(sharedPreferences.getString("particle_device_id", ""))
-            particleTokenId.setText(sharedPreferences.getString("particle_token_id", ""))
-            favouriteColor.setText(sharedPreferences.getString("favourite_color", ""))
+            val particleApiUrl = sharedPreferences.getString("particleApiUrl", defaultParticleApiUrl)
+            val particleDeviceId = sharedPreferences.getString("particleDeviceId", defaultParticleDeviceId)
+            val particleTokenId = sharedPreferences.getString("particleTokenId", defaultParticleTokenId)
+            val favouriteColor = sharedPreferences.getString("favouriteColor", defaultFavouriteColor)
 
-            setupField(particleApiUrl, defaultApiUrl)
-            setupField(particleDeviceId, defaultDeviceId)
-            setupField(particleTokenId, defaultTokenId)
-            setupField(favouriteColor, defaultFavouriteColor)
+            Log.d("settings", "Loaded particleApiUrl: $particleApiUrl")
+            Log.d("settings", "Loaded particleDeviceId: $particleDeviceId")
+            Log.d("settings", "Loaded particleTokenId: $particleTokenId")
+            Log.d("settings", "Loaded favouriteColor: $favouriteColor")
 
-            val favouriteColorValue = sharedPreferences.getString("favourite_color", "")
+            particleApiUrlField.setText(particleApiUrl)
+            particleDeviceIdField.setText(particleDeviceId)
+            particleTokenIdField.setText(particleTokenId)
+            favouriteColorField.setText(favouriteColor)
+
+            setupField(particleApiUrlField, defaultParticleApiUrl)
+            setupField(particleDeviceIdField, defaultParticleDeviceId)
+            setupField(particleTokenIdField, defaultParticleTokenId)
+
+            val favouriteColorValue = sharedPreferences.getString("favouriteColor", "")
             favouriteColorValue?.let {
-                if (it.all { char -> char.isDigit() }) {
+                if (it.isNotEmpty() && it.all { char -> char.isDigit() }) {
                     val favouriteColorInt = it.toInt()
-                    favouriteColor.setTextColor(favouriteColorInt)
+                    favouriteColorField.setTextColor(favouriteColorInt)
                     favouriteColorButton.setBackgroundColor(favouriteColorInt)
                     favouriteColorButton.setTextColor(if (isColorDark(favouriteColorInt)) Color.WHITE else Color.BLACK)
                 }
@@ -94,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
             fabButton.apply {
                 hide()
-                backgroundTintList = ColorStateList.valueOf(resources.getColor(android.R.color.holo_green_dark))
+                backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_green_dark))
                 setColorFilter(Color.WHITE)
                 setImageResource(R.drawable.ic_save_black)
                 setOnClickListener { handleFabButtonClick(it) }
@@ -102,6 +112,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
     /**
      * Sets up EditText behavior for the settings screen.
@@ -187,7 +198,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        binding.navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        binding.navView.setOnItemSelectedListener(onNavigationItemSelectedListener)
     }
 
     private fun setupColorPicker() {
@@ -225,59 +236,102 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleFabButtonClick(view: View) {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastFabButtonClickTime < this.debounceInterval) {
-            Toast.makeText(view.context, "Please wait...", Toast.LENGTH_SHORT).show()
+        if (isDebounced()) {
+            showToast(view.context, "Please wait...")
             return
         }
-        lastFabButtonClickTime = currentTime
+        updateLastFabButtonClickTime()
 
         val selectedItem = getSelectedItem(binding.navView)
         Log.d("handleFabButtonClick", "Selected item: $selectedItem")
 
         when (selectedItem) {
-            getString(R.string.title_light) -> {
-                Log.d("handleFabButtonClick", "Light screen active")
-                val tagLightStatus = binding.fabButton.getTag(R.id.light_status) as String
-                if (tagLightStatus == "lightOn") {
-                    val rgbString = "0,0,0,1000"
-                    val colorSet = "Red: 0 Green: 0 Blue: 0"
-                    Toast.makeText(view.context, "Turning off...", Toast.LENGTH_SHORT).show()
-                    binding.fabButton.hide()
-                    binding.fabButton.setImageResource(R.drawable.ic_lightbulb_outline_black)
-                    binding.fabButton.show()
-                    binding.fabButton.setTag(R.id.light_status, "lightOff")
-                } else {
-                    val chosenColor: Int = binding.fabButton.getTag(R.id.fab_bg_color) as Int
-                    val red = Color.red(chosenColor)
-                    val green = Color.green(chosenColor)
-                    val blue = Color.blue(chosenColor)
-                    val rgbString = "$red,$green,$blue,1000"
-                    val colorSet = "Red: $red Green: $green Blue: $blue"
-                    Toast.makeText(view.context, "Turning on...", Toast.LENGTH_SHORT).show()
-                    binding.fabButton.hide()
-                    binding.fabButton.setImageResource(R.drawable.ic_lightbulb_on_black)
-                    binding.fabButton.show()
-                    binding.fabButton.setTag(R.id.light_status, "lightOn")
-                }
-            }
-            getString(R.string.title_settings) -> {
-                Log.d("handleFabButtonClick", "Settings screen active")
-                Toast.makeText(view.context, "I'll keep those settings in mind :)", Toast.LENGTH_SHORT).show()
-                val sharedPreference = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
-                val editor = sharedPreference.edit()
-                editor.putString("particleApiUrl", binding.particleApiUrl.text.toString())
-                editor.putString("particleDeviceId", binding.particleDeviceId.text.toString())
-                editor.putString("particleTokenId", binding.particleTokenId.text.toString())
-                editor.putString("favouriteColor", binding.favouriteColor.text.toString())
-                editor.apply()
-            }
-            else -> {
-                Log.d("handleFabButtonClick", "Unknown screen active")
-                Toast.makeText(view.context, "Unknown screen", Toast.LENGTH_SHORT).show()
-            }
+            getString(R.string.title_light) -> handleLightScreen(view)
+            getString(R.string.title_settings) -> handleSettingsScreen(view)
+            else -> handleUnknownScreen(view)
         }
     }
+
+    private fun isDebounced(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        return currentTime - lastFabButtonClickTime < this.debounceInterval
+    }
+
+    private fun updateLastFabButtonClickTime() {
+        lastFabButtonClickTime = System.currentTimeMillis()
+    }
+
+    private fun handleLightScreen(view: View) {
+        Log.d("handleFabButtonClick", "Light screen active")
+        val tagLightStatus = binding.fabButton.getTag(R.id.light_status) as String
+        if (tagLightStatus == "lightOn") {
+            turnOffLight(view)
+        } else {
+            turnOnLight(view)
+        }
+    }
+
+    private fun turnOffLight(view: View) {
+        val rgbString = "0,0,0,1000"
+        val colorSet = "Red: 0 Green: 0 Blue: 0"
+        showToast(view.context, "Turning off...")
+        updateFabButton(R.drawable.ic_lightbulb_outline_black, "lightOff")
+    }
+
+    private fun turnOnLight(view: View) {
+        val chosenColor: Int = binding.fabButton.getTag(R.id.fab_bg_color) as Int
+        val red = Color.red(chosenColor)
+        val green = Color.green(chosenColor)
+        val blue = Color.blue(chosenColor)
+        val rgbString = "$red,$green,$blue,1000"
+        val colorSet = "Red: $red Green: $green Blue: $blue"
+        showToast(view.context, "Turning on...")
+        updateFabButton(R.drawable.ic_lightbulb_on_black, "lightOn")
+    }
+
+    private fun updateFabButton(imageResource: Int, status: String) {
+        binding.fabButton.hide()
+        binding.fabButton.setImageResource(imageResource)
+        binding.fabButton.show()
+        binding.fabButton.setTag(R.id.light_status, status)
+    }
+
+    private fun handleSettingsScreen(view: View) {
+        Log.d("handleFabButtonClick", "Settings screen active")
+        showToast(view.context, "I'll keep those settings in mind :)")
+        saveSettings()
+    }
+
+    private fun saveSettings() {
+        val sharedPreference = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
+        val particleApiUrl = binding.particleApiUrlField.text.toString()
+        val particleDeviceId = binding.particleDeviceIdField.text.toString()
+        val particleTokenId = binding.particleTokenIdField.text.toString()
+        val favouriteColor = binding.favouriteColorField.text.toString()
+
+        Log.d("saveSettings", "Saving particleApiUrl: $particleApiUrl")
+        Log.d("saveSettings", "Saving particleDeviceId: $particleDeviceId")
+        Log.d("saveSettings", "Saving particleTokenId: $particleTokenId")
+        Log.d("saveSettings", "Saving favouriteColor: $favouriteColor")
+
+        sharedPreference.edit().apply {
+            putString("particleApiUrl", particleApiUrl)
+            putString("particleDeviceId", particleDeviceId)
+            putString("particleTokenId", particleTokenId)
+            putString("favouriteColor", favouriteColor)
+            apply()
+        }
+    }
+
+    private fun handleUnknownScreen(view: View) {
+        Log.d("handleFabButtonClick", "Unknown screen active")
+        showToast(view.context, "Unknown screen")
+    }
+
+    private fun showToast(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
 
 
 
@@ -296,10 +350,12 @@ class MainActivity : AppCompatActivity() {
                     if (isPlaying) {
                         isPlaying = false
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_pause_black)
+                        Toast.makeText(view.context, "Pause", Toast.LENGTH_SHORT).show()
                         //QueryUtils.changeAudio("pause,$currentVolume", view)
                     } else {
                         isPlaying = true
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_play_arrow_black)
+                        Toast.makeText(view.context, "Play", Toast.LENGTH_SHORT).show()
                         //QueryUtils.changeAudio("play,$currentVolume", view)
                     }
                 }
@@ -309,6 +365,7 @@ class MainActivity : AppCompatActivity() {
         binding.nextSongButton.setOnClickListener { view ->
             when (view.id) {
                 R.id.next_song_button -> {
+                    Toast.makeText(view.context, "Next", Toast.LENGTH_SHORT).show()
                     //QueryUtils.changeAudio("playNext,$currentVolume", view)
                 }
             }
