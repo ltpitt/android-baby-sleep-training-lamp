@@ -284,7 +284,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("rgbString", rgbString)
         Log.d("colorSet", colorSet)
         QueryUtils.changeColor(rgbString, colorSet, view)
-        showToast(view.context, "Turning off...")
         updateFabButton(R.drawable.ic_lightbulb_outline_black, "lightOff")
     }
 
@@ -298,7 +297,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("rgbString", rgbString)
         Log.d("colorSet", colorSet)
         QueryUtils.changeColor(rgbString, colorSet, view)
-        showToast(view.context, "Turning on...")
         updateFabButton(R.drawable.ic_lightbulb_on_black, "lightOn")
     }
 
@@ -345,14 +343,10 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-
-
-
     private fun setupMusicControls() {
         binding.previousSongButton.setOnClickListener { view ->
             when (view.id) {
                 R.id.previous_song_button -> {
-                    Toast.makeText(view.context, "Previous", Toast.LENGTH_SHORT).show()
                     QueryUtils.changeAudio("previous,$currentVolume", view)
                 }
             }
@@ -364,12 +358,10 @@ class MainActivity : AppCompatActivity() {
                     if (isPlaying) {
                         isPlaying = false
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_pause_black)
-                        Toast.makeText(view.context, "Pause", Toast.LENGTH_SHORT).show()
                         QueryUtils.changeAudio("pause,$currentVolume", view)
                     } else {
                         isPlaying = true
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_play_arrow_black)
-                        Toast.makeText(view.context, "Play", Toast.LENGTH_SHORT).show()
                         QueryUtils.changeAudio("play,$currentVolume", view)
                     }
                 }
@@ -379,7 +371,6 @@ class MainActivity : AppCompatActivity() {
         binding.nextSongButton.setOnClickListener { view ->
             when (view.id) {
                 R.id.next_song_button -> {
-                    Toast.makeText(view.context, "Next", Toast.LENGTH_SHORT).show()
                     QueryUtils.changeAudio("playNext,$currentVolume", view)
                 }
             }
@@ -391,7 +382,6 @@ class MainActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 currentVolume = i
                 QueryUtils.changeAudio("setVolume,$i", binding.volumeSeekbar)
-                Toast.makeText(applicationContext, "Volume: $i", Toast.LENGTH_SHORT).show()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
