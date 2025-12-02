@@ -61,6 +61,17 @@ object QueryUtils {
         }
     }
 
+    private fun getErrorMessage(statusCode: Int): String {
+        return when (statusCode) {
+            0 -> "No network connection. Please check your internet."
+            401 -> "Invalid access token. Please check settings."
+            404 -> "Device not found. Please check Device ID."
+            408 -> "Request timeout. Please try again."
+            in 500..599 -> "Server error. Please try again later."
+            else -> "Failed to communicate with lamp. Error: $statusCode"
+        }
+    }
+
     fun changeColor(rgbString: String, colorSet: String, onClickView: View) {
         if (!startRequest()) {
             Toast.makeText(onClickView.context, "Please wait, request is already in progress.", Toast.LENGTH_SHORT).show()
@@ -99,17 +110,7 @@ object QueryUtils {
             override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: Throwable) {
                 endRequest()
                 Log.e(LOG_TAG, "Failed to set color. Status code: $statusCode, Response: $res", t)
-                
-                val message = when (statusCode) {
-                    0 -> "No network connection. Please check your internet."
-                    401 -> "Invalid access token. Please check settings."
-                    404 -> "Device not found. Please check Device ID."
-                    408 -> "Request timeout. Please try again."
-                    in 500..599 -> "Server error. Please try again later."
-                    else -> "Failed to communicate with lamp. Error: $statusCode"
-                }
-                
-                Toast.makeText(onClickView.context, message, Toast.LENGTH_LONG).show()
+                Toast.makeText(onClickView.context, getErrorMessage(statusCode), Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -152,17 +153,7 @@ object QueryUtils {
             override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: Throwable) {
                 endRequest()
                 Log.e(LOG_TAG, "Failed to change audio. Status code: $statusCode, Response: $res", t)
-                
-                val message = when (statusCode) {
-                    0 -> "No network connection. Please check your internet."
-                    401 -> "Invalid access token. Please check settings."
-                    404 -> "Device not found. Please check Device ID."
-                    408 -> "Request timeout. Please try again."
-                    in 500..599 -> "Server error. Please try again later."
-                    else -> "Failed to communicate with lamp. Error: $statusCode"
-                }
-                
-                Toast.makeText(onClickView.context, message, Toast.LENGTH_LONG).show()
+                Toast.makeText(onClickView.context, getErrorMessage(statusCode), Toast.LENGTH_LONG).show()
             }
         })
     }

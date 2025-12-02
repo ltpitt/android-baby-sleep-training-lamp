@@ -5,7 +5,7 @@
             <certificates src="system" />
         </trust-anchors>
     </base-config>
-    <!-- Allow HTTPS for Particle API -->
+    <!-- HTTPS-only configuration for Particle API -->
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">api.particle.io</domain>
     </domain-config>
