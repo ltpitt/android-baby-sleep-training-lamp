@@ -19,9 +19,9 @@ App images
 Pre-requisites
 --------------
 
-- Android SDK v24
-- Android Build Tools v23.0.3
-- Android Support Repository v24.1.1
+- Android SDK v35
+- Android Build Tools
+
 
 Getting Started
 ---------------
