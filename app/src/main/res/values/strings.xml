@@ -19,4 +19,25 @@
     <string name="volume_up_image">volume_up_image</string>
     <string name="floating_action_button">floating_action_button</string>
     <string name="your_favourite_color_int_code">Your favourite color (INT code)</string>
+
+    <!-- User Messages -->
+    <string name="msg_long_click_detected">Long click detected</string>
+    <string name="msg_please_wait">Please wait...</string>
+    <string name="msg_unknown_screen">Unknown screen</string>
+    <string name="error_invalid_api_url">Invalid API URL. Must be a valid HTTPS URL.</string>
+    <string name="error_invalid_device_id">Please enter a valid Device ID</string>
+    <string name="error_invalid_token">Please enter a valid Access Token</string>
+    <string name="msg_settings_saved">I\'ll keep those settings in mind :)</string>
+    <string name="error_missing_config">Please check your settings. Missing configuration.</string>
+    <string name="msg_lamp_color_success">Lamp color changed successfully! Lamp is online.</string>
+    <string name="msg_lamp_color_offline">Lamp color changed, but the lamp might be offline.</string>
+    <string name="msg_lamp_audio_success">Lamp audio changed successfully! Lamp is online.</string>
+    <string name="msg_lamp_audio_offline">Lamp audio changed, but the lamp might be offline.</string>
+    <string name="error_no_network">No network connection. Please check your internet.</string>
+    <string name="error_invalid_token_settings">Invalid access token. Please check settings.</string>
+    <string name="error_device_not_found">Device not found. Please check Device ID.</string>
+    <string name="error_timeout">Request timeout. Please try again.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_communication_failed">Failed to communicate with lamp.</string>
+    <string name="error_communication_failed_code">Failed to communicate with lamp. Error: %1$d</string>
 </resources>

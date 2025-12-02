@@ -65,17 +65,17 @@ class MainActivity : AppCompatActivity() {
         val token = binding.particleTokenIdField.text.toString()
         
         if (!isValidUrl(url)) {
-            Toast.makeText(this, "Invalid API URL. Must be a valid HTTPS URL.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.error_invalid_api_url), Toast.LENGTH_LONG).show()
             return false
         }
         
         if (deviceId.isEmpty() || deviceId == getString(R.string.particle_device_id)) {
-            Toast.makeText(this, "Please enter a valid Device ID", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.error_invalid_device_id), Toast.LENGTH_LONG).show()
             return false
         }
         
         if (token.isEmpty() || token == getString(R.string.particle_token_id)) {
-            Toast.makeText(this, "Please enter a valid Access Token", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.error_invalid_token), Toast.LENGTH_LONG).show()
             return false
         }
         
@@ -292,7 +292,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabButton.setOnLongClickListener {
             if (binding.colorPicker.isVisible) {
-                Toast.makeText(this, "Long click detected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.msg_long_click_detected), Toast.LENGTH_SHORT).show()
             }
             true
         }
@@ -300,7 +300,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleFabButtonClick(view: View) {
         if (isDebounced()) {
-            showToast(view.context, "Please wait...")
+            showToast(view.context, getString(R.string.msg_please_wait))
             return
         }
         updateLastFabButtonClickTime()
@@ -387,7 +387,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleUnknownScreen(view: View) {
         Log.d("handleFabButtonClick", "Unknown screen active")
-        showToast(view.context, "Unknown screen")
+        showToast(view.context, getString(R.string.msg_unknown_screen))
     }
 
     private fun showToast(context: Context, message: String) {

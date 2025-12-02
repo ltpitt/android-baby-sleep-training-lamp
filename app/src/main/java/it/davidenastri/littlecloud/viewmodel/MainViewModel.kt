@@ -55,13 +55,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             apply()
         }
         loadSettings()
-        _toastMessage.value = "I'll keep those settings in mind :)"
+        _toastMessage.value = getApplication<Application>().getString(R.string.msg_settings_saved)
     }
 
     private fun validateSettings(): Boolean {
         // Basic validation - can be improved
         if (particleApiUrl.isEmpty() || particleDeviceId.isEmpty() || particleTokenId.isEmpty()) {
-            _toastMessage.value = "Please check your settings. Missing configuration."
+            _toastMessage.value = getApplication<Application>().getString(R.string.error_missing_config)
             return false
         }
         return true
@@ -78,9 +78,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             result.onSuccess { response ->
                 Log.i("MainViewModel", "Color set to: $colorSetDescription successfully. Response: $response")
                 val message = if (response.connected && response.return_value == 1) {
-                    "Lamp color changed successfully! Lamp is online."
+                    getApplication<Application>().getString(R.string.msg_lamp_color_success)
                 } else {
-                    "Lamp color changed, but the lamp might be offline."
+                    getApplication<Application>().getString(R.string.msg_lamp_color_offline)
                 }
                 _toastMessage.value = message
             }.onFailure { e ->
@@ -100,9 +100,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             result.onSuccess { response ->
                 Log.i("MainViewModel", "Audio command sent: $commandString successfully. Response: $response")
                 val message = if (response.connected && response.return_value == 1) {
-                    "Lamp audio changed successfully! Lamp is online."
+                    getApplication<Application>().getString(R.string.msg_lamp_audio_success)
                 } else {
-                    "Lamp audio changed, but the lamp might be offline."
+                    getApplication<Application>().getString(R.string.msg_lamp_audio_offline)
                 }
                 _toastMessage.value = message
             }.onFailure { e ->
@@ -114,17 +114,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun handleError(e: Throwable) {
         Log.e("MainViewModel", "Request failed", e)
         val message = when (e) {
-            is IOException -> "No network connection. Please check your internet."
+            is IOException -> getApplication<Application>().getString(R.string.error_no_network)
             is HttpException -> {
                 when (e.code()) {
-                    401 -> "Invalid access token. Please check settings."
-                    404 -> "Device not found. Please check Device ID."
-                    408 -> "Request timeout. Please try again."
-                    in 500..599 -> "Server error. Please try again later."
-                    else -> "Failed to communicate with lamp. Error: ${e.code()}"
+                    401 -> getApplication<Application>().getString(R.string.error_invalid_token_settings)
+                    404 -> getApplication<Application>().getString(R.string.error_device_not_found)
+                    408 -> getApplication<Application>().getString(R.string.error_timeout)
+                    in 500..599 -> getApplication<Application>().getString(R.string.error_server)
+                    else -> getApplication<Application>().getString(R.string.error_communication_failed_code, e.code())
                 }
             }
-            else -> "Failed to communicate with lamp."
+            else -> getApplication<Application>().getString(R.string.error_communication_failed)
         }
         _toastMessage.value = message
     }
