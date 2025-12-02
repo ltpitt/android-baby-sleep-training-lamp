@@ -33,7 +33,8 @@
 private fun isValidUrl(url: String): Boolean {
     return try {
         val uri = Uri.parse(url)
-        uri.scheme in listOf("http", "https") && uri.host != null
+        // Enforce HTTPS for security
+        uri.scheme == "https" && uri.host != null
     } catch (e: Exception) {
         false
     }

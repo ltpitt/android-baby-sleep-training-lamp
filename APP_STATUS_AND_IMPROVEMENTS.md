@@ -164,7 +164,7 @@ Add progress indicators when:
 #### 1. Dependency Updates
 **Priority:** HIGH
 **Current Issues:**
-- kotlin_version: 1.8.0 (Latest: 1.9.x or 2.0.x)
+- kotlin_version: 1.8.0 (Consider updating to 1.9.22 or later)
 - androidx.appcompat: 1.4.0 (Latest: 1.6.x)
 - material: 1.4.0 (Latest: 1.11.x)
 - constraintlayout: 2.1.0 (Latest: 2.1.4)

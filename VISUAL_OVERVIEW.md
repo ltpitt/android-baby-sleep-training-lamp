@@ -248,7 +248,7 @@ USER INTERACTION
 
 ```
 App Dependencies
-├── Kotlin (1.8.0) ⚠️ UPDATE AVAILABLE
+├── Kotlin (1.8.0) ⚠️ UPDATE TO 1.9.22+
 ├── AndroidX
 │   ├── AppCompat (1.4.0) ⚠️ UPDATE AVAILABLE
 │   ├── Core KTX (1.7.0) ⚠️ UPDATE AVAILABLE
