@@ -14,7 +14,7 @@ data class ParticleResponse(
 
 interface ParticleApiService {
     @FormUrlEncoded
-    @POST("v1/devices/{deviceId}/setColor")
+    @POST("{deviceId}/setColor")
     suspend fun setColor(
         @Path("deviceId") deviceId: String,
         @Field("access_token") accessToken: String,
@@ -22,7 +22,7 @@ interface ParticleApiService {
     ): ParticleResponse
 
     @FormUrlEncoded
-    @POST("v1/devices/{deviceId}/dfMini")
+    @POST("{deviceId}/dfMini")
     suspend fun controlAudio(
         @Path("deviceId") deviceId: String,
         @Field("access_token") accessToken: String,

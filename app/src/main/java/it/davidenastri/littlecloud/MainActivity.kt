@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -18,11 +19,14 @@ import androidx.core.view.size
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import it.davidenastri.littlecloud.databinding.ActivityMainBinding
+import it.davidenastri.littlecloud.viewmodel.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
+    
     private var currentVolume = 0
     private var isPlaying = false
     private var lastFabButtonClickTime: Long = 0
@@ -102,17 +106,16 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun handleSettingsNavigation() {
-        val sharedPreferences = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         with(binding) {
             val defaultParticleApiUrl = getString(R.string.particle_api_url)
             val defaultParticleDeviceId = getString(R.string.particle_device_id)
             val defaultParticleTokenId = getString(R.string.particle_token_id)
-            val defaultFavouriteColor = getString(R.string.favourite_color)
-
-            val particleApiUrl = sharedPreferences.getString("particleApiUrl", defaultParticleApiUrl)
-            val particleDeviceId = sharedPreferences.getString("particleDeviceId", defaultParticleDeviceId)
-            val particleTokenId = sharedPreferences.getString("particleTokenId", defaultParticleTokenId)
-            val favouriteColor = sharedPreferences.getString("favouriteColor", defaultFavouriteColor)
+            
+            // Use values from ViewModel
+            val particleApiUrl = viewModel.particleApiUrl
+            val particleDeviceId = viewModel.particleDeviceId
+            val particleTokenId = viewModel.particleTokenId
+            val favouriteColor = viewModel.favouriteColor
 
             Log.d("settings", "Loaded particleApiUrl: $particleApiUrl")
             Log.d("settings", "Loaded particleDeviceId: $particleDeviceId")
@@ -132,17 +135,14 @@ class MainActivity : AppCompatActivity() {
             updateTextColor(particleDeviceIdField, defaultParticleDeviceId)
             updateTextColor(particleTokenIdField, defaultParticleTokenId)
 
-            val favouriteColorValue = sharedPreferences.getString("favouriteColor", "")
-            favouriteColorValue?.let {
-                if (it.isNotEmpty() && it.all { char -> char.isDigit() }) {
-                    try {
-                        val favouriteColorInt = it.toInt()
-                        favouriteColorField.setTextColor(favouriteColorInt)
-                        favouriteColorButton.setBackgroundColor(favouriteColorInt)
-                        favouriteColorButton.setTextColor(if (isColorDark(favouriteColorInt)) Color.WHITE else Color.BLACK)
-                    } catch (e: NumberFormatException) {
-                        Log.e("settings", "Failed to parse favourite color: $it", e)
-                    }
+            if (favouriteColor.isNotEmpty() && favouriteColor.all { char -> char.isDigit() }) {
+                try {
+                    val favouriteColorInt = favouriteColor.toInt()
+                    favouriteColorField.setTextColor(favouriteColorInt)
+                    favouriteColorButton.setBackgroundColor(favouriteColorInt)
+                    favouriteColorButton.setTextColor(if (isColorDark(favouriteColorInt)) Color.WHITE else Color.BLACK)
+                } catch (e: NumberFormatException) {
+                    Log.e("settings", "Failed to parse favourite color: $favouriteColor", e)
                 }
             }
 
@@ -243,6 +243,24 @@ class MainActivity : AppCompatActivity() {
         setupFabButton()
         setupMusicControls()
         setupVolumeSeekbar()
+        setupObservers()
+    }
+    
+    private fun setupObservers() {
+        viewModel.toastMessage.observe(this) { message ->
+            message?.let {
+                showToast(this, it)
+            }
+        }
+        
+        viewModel.isLoading.observe(this) { isLoading ->
+            // TODO: Show/Hide loading indicator if you have one
+            if (isLoading) {
+                // binding.progressBar.visibility = View.VISIBLE
+            } else {
+                // binding.progressBar.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -321,7 +339,7 @@ class MainActivity : AppCompatActivity() {
         val colorSet = "Red: 0 Green: 0 Blue: 0"
         Log.d("rgbString", rgbString)
         Log.d("colorSet", colorSet)
-        QueryUtils.changeColor(rgbString, colorSet, view)
+        viewModel.changeColor(rgbString, colorSet)
         updateFabButton(R.drawable.ic_lightbulb_outline_black, "lightOff")
     }
 
@@ -334,7 +352,7 @@ class MainActivity : AppCompatActivity() {
         val colorSet = "Red: $red Green: $green Blue: $blue"
         Log.d("rgbString", rgbString)
         Log.d("colorSet", colorSet)
-        QueryUtils.changeColor(rgbString, colorSet, view)
+        viewModel.changeColor(rgbString, colorSet)
         updateFabButton(R.drawable.ic_lightbulb_on_black, "lightOn")
     }
 
@@ -350,12 +368,10 @@ class MainActivity : AppCompatActivity() {
         if (!validateSettings()) {
             return
         }
-        showToast(view.context, "I'll keep those settings in mind :)")
         saveSettings()
     }
 
     private fun saveSettings() {
-        val sharedPreference = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
         val particleApiUrl = binding.particleApiUrlField.text.toString()
         val particleDeviceId = binding.particleDeviceIdField.text.toString()
         val particleTokenId = binding.particleTokenIdField.text.toString()
@@ -366,13 +382,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("saveSettings", "Saving particleTokenId: $particleTokenId")
         Log.d("saveSettings", "Saving favouriteColor: $favouriteColor")
 
-        sharedPreference.edit().apply {
-            putString("particleApiUrl", particleApiUrl)
-            putString("particleDeviceId", particleDeviceId)
-            putString("particleTokenId", particleTokenId)
-            putString("favouriteColor", favouriteColor)
-            apply()
-        }
+        viewModel.saveSettings(particleApiUrl, particleDeviceId, particleTokenId, favouriteColor)
     }
 
     private fun handleUnknownScreen(view: View) {
@@ -388,7 +398,7 @@ class MainActivity : AppCompatActivity() {
         binding.previousSongButton.setOnClickListener { view ->
             when (view.id) {
                 R.id.previous_song_button -> {
-                    QueryUtils.changeAudio("previous,$currentVolume", view)
+                    viewModel.changeAudio("previous,$currentVolume")
                 }
             }
         }
@@ -399,11 +409,11 @@ class MainActivity : AppCompatActivity() {
                     if (isPlaying) {
                         isPlaying = false
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_pause_black)
-                        QueryUtils.changeAudio("pause,$currentVolume", view)
+                        viewModel.changeAudio("pause,$currentVolume")
                     } else {
                         isPlaying = true
                         binding.playPauseSongButton.setImageResource(R.drawable.ic_play_arrow_black)
-                        QueryUtils.changeAudio("play,$currentVolume", view)
+                        viewModel.changeAudio("play,$currentVolume")
                     }
                 }
             }
@@ -412,7 +422,7 @@ class MainActivity : AppCompatActivity() {
         binding.nextSongButton.setOnClickListener { view ->
             when (view.id) {
                 R.id.next_song_button -> {
-                    QueryUtils.changeAudio("playNext,$currentVolume", view)
+                    viewModel.changeAudio("playNext,$currentVolume")
                 }
             }
         }
@@ -422,7 +432,7 @@ class MainActivity : AppCompatActivity() {
         binding.volumeSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 currentVolume = i
-                QueryUtils.changeAudio("setVolume,$i", binding.volumeSeekbar)
+                viewModel.changeAudio("setVolume,$i")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
