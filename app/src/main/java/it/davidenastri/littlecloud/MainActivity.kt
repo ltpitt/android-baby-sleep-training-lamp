@@ -3,6 +3,7 @@ package it.davidenastri.littlecloud
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -42,6 +43,39 @@ class MainActivity : AppCompatActivity() {
     private fun isColorDark(color: Int): Boolean {
         val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
         return darkness > 0.5
+    }
+
+    private fun isValidUrl(url: String): Boolean {
+        return try {
+            val uri = Uri.parse(url)
+            // Enforce HTTPS for security
+            uri.scheme == "https" && uri.host != null
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun validateSettings(): Boolean {
+        val url = binding.particleApiUrlField.text.toString()
+        val deviceId = binding.particleDeviceIdField.text.toString()
+        val token = binding.particleTokenIdField.text.toString()
+        
+        if (!isValidUrl(url)) {
+            Toast.makeText(this, "Invalid API URL. Must be a valid HTTPS URL.", Toast.LENGTH_LONG).show()
+            return false
+        }
+        
+        if (deviceId.isEmpty() || deviceId == getString(R.string.particle_device_id)) {
+            Toast.makeText(this, "Please enter a valid Device ID", Toast.LENGTH_LONG).show()
+            return false
+        }
+        
+        if (token.isEmpty() || token == getString(R.string.particle_token_id)) {
+            Toast.makeText(this, "Please enter a valid Access Token", Toast.LENGTH_LONG).show()
+            return false
+        }
+        
+        return true
     }
 
     private val onNavigationItemSelectedListener = NavigationBarView.OnItemSelectedListener { item ->
@@ -101,10 +135,14 @@ class MainActivity : AppCompatActivity() {
             val favouriteColorValue = sharedPreferences.getString("favouriteColor", "")
             favouriteColorValue?.let {
                 if (it.isNotEmpty() && it.all { char -> char.isDigit() }) {
-                    val favouriteColorInt = it.toInt()
-                    favouriteColorField.setTextColor(favouriteColorInt)
-                    favouriteColorButton.setBackgroundColor(favouriteColorInt)
-                    favouriteColorButton.setTextColor(if (isColorDark(favouriteColorInt)) Color.WHITE else Color.BLACK)
+                    try {
+                        val favouriteColorInt = it.toInt()
+                        favouriteColorField.setTextColor(favouriteColorInt)
+                        favouriteColorButton.setBackgroundColor(favouriteColorInt)
+                        favouriteColorButton.setTextColor(if (isColorDark(favouriteColorInt)) Color.WHITE else Color.BLACK)
+                    } catch (e: NumberFormatException) {
+                        Log.e("settings", "Failed to parse favourite color: $it", e)
+                    }
                 }
             }
 
@@ -309,6 +347,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleSettingsScreen(view: View) {
         Log.d("handleFabButtonClick", "Settings screen active")
+        if (!validateSettings()) {
+            return
+        }
         showToast(view.context, "I'll keep those settings in mind :)")
         saveSettings()
     }

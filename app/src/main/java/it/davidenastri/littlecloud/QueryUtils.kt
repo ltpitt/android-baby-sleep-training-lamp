@@ -21,7 +21,20 @@ object QueryUtils {
     private const val DEFAULT_NAME = "defaultName"
     private const val LOG_TAG = "QueryUtils"
 
+    @Volatile
     private var isRequestInProgress = false
+
+    @Synchronized
+    private fun startRequest(): Boolean {
+        if (isRequestInProgress) return false
+        isRequestInProgress = true
+        return true
+    }
+
+    @Synchronized
+    private fun endRequest() {
+        isRequestInProgress = false
+    }
 
     private fun getSharedPreferences(view: View): SharedPreferences {
         Log.d(LOG_TAG, "Getting SharedPreferences for view: $view")
@@ -49,12 +62,11 @@ object QueryUtils {
     }
 
     fun changeColor(rgbString: String, colorSet: String, onClickView: View) {
-        if (isRequestInProgress) {
+        if (!startRequest()) {
             Toast.makeText(onClickView.context, "Please wait, request is already in progress.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        isRequestInProgress = true
         Log.d(LOG_TAG, "Changing color to: $colorSet with RGB string: $rgbString")
         val (deviceId, tokenId, apiUrl) = getParticleDetails(onClickView)
 
@@ -65,7 +77,7 @@ object QueryUtils {
         Log.d(LOG_TAG, "Sending POST request to URL: $url with params: $params")
         client.post(url, params, object : TextHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<Header>, res: String) {
-                isRequestInProgress = false
+                endRequest()
                 Log.i(LOG_TAG, "Color set to: $colorSet successfully. Response: $res")
                 try {
                     val response = JSONObject(res)
@@ -85,20 +97,29 @@ object QueryUtils {
             }
 
             override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: Throwable) {
-                isRequestInProgress = false
+                endRequest()
                 Log.e(LOG_TAG, "Failed to set color. Status code: $statusCode, Response: $res", t)
-                Toast.makeText(onClickView.context, "Little Cloud is offline...", Toast.LENGTH_LONG).show()
+                
+                val message = when (statusCode) {
+                    0 -> "No network connection. Please check your internet."
+                    401 -> "Invalid access token. Please check settings."
+                    404 -> "Device not found. Please check Device ID."
+                    408 -> "Request timeout. Please try again."
+                    in 500..599 -> "Server error. Please try again later."
+                    else -> "Failed to communicate with lamp. Error: $statusCode"
+                }
+                
+                Toast.makeText(onClickView.context, message, Toast.LENGTH_LONG).show()
             }
         })
     }
 
     fun changeAudio(commandString: String, onClickView: View) {
-        if (isRequestInProgress) {
+        if (!startRequest()) {
             Toast.makeText(onClickView.context, "Please wait, request is already in progress.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        isRequestInProgress = true
         Log.d(LOG_TAG, "Changing audio with command: $commandString")
         val (deviceId, tokenId, apiUrl) = getParticleDetails(onClickView)
 
@@ -109,7 +130,7 @@ object QueryUtils {
         Log.d(LOG_TAG, "Sending POST request to URL: $url with params: $params")
         client.post(url, params, object : TextHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<Header>, res: String) {
-                isRequestInProgress = false
+                endRequest()
                 Log.i(LOG_TAG, "Audio command sent: $commandString successfully. Response: $res")
                 try {
                     val response = JSONObject(res)
@@ -129,9 +150,19 @@ object QueryUtils {
             }
 
             override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: Throwable) {
-                isRequestInProgress = false
+                endRequest()
                 Log.e(LOG_TAG, "Failed to change audio. Status code: $statusCode, Response: $res", t)
-                Toast.makeText(onClickView.context, "Little Cloud is offline...", Toast.LENGTH_LONG).show()
+                
+                val message = when (statusCode) {
+                    0 -> "No network connection. Please check your internet."
+                    401 -> "Invalid access token. Please check settings."
+                    404 -> "Device not found. Please check Device ID."
+                    408 -> "Request timeout. Please try again."
+                    in 500..599 -> "Server error. Please try again later."
+                    else -> "Failed to communicate with lamp. Error: $statusCode"
+                }
+                
+                Toast.makeText(onClickView.context, message, Toast.LENGTH_LONG).show()
             }
         })
     }
