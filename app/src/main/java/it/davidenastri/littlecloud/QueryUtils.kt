@@ -5,12 +5,12 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.RequestParams
-import com.loopj.android.http.TextHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import org.json.JSONException
-import org.json.JSONObject
+import it.davidenastri.littlecloud.network.ParticleApiService
+import it.davidenastri.littlecloud.network.RetrofitClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object QueryUtils {
 
@@ -53,14 +53,6 @@ object QueryUtils {
         return arrayOf(deviceId, tokenId, apiUrl)
     }
 
-    private fun createRequestParams(tokenId: String, args: String): RequestParams {
-        Log.d(LOG_TAG, "Creating request parameters with token ID: $tokenId and args: $args")
-        return RequestParams().apply {
-            put("access_token", tokenId)
-            put("args", args)
-        }
-    }
-
     private fun getErrorMessage(statusCode: Int): String {
         return when (statusCode) {
             0 -> "No network connection. Please check your internet."
@@ -81,38 +73,29 @@ object QueryUtils {
         Log.d(LOG_TAG, "Changing color to: $colorSet with RGB string: $rgbString")
         val (deviceId, tokenId, apiUrl) = getParticleDetails(onClickView)
 
-        val url = "$apiUrl$deviceId/setColor"
-        val params = createRequestParams(tokenId, rgbString)
-        val client = AsyncHttpClient()
+        val apiService = RetrofitClient.getClient(apiUrl).create(ParticleApiService::class.java)
 
-        Log.d(LOG_TAG, "Sending POST request to URL: $url with params: $params")
-        client.post(url, params, object : TextHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<Header>, res: String) {
-                endRequest()
-                Log.i(LOG_TAG, "Color set to: $colorSet successfully. Response: $res")
-                try {
-                    val response = JSONObject(res)
-                    val connected = response.getBoolean("connected")
-                    val returnValue = response.getInt("return_value")
-
-                    val message = if (connected && returnValue == 1) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = apiService.setColor(deviceId, tokenId, rgbString)
+                withContext(Dispatchers.Main) {
+                    endRequest()
+                    Log.i(LOG_TAG, "Color set to: $colorSet successfully. Response: $response")
+                    val message = if (response.connected && response.return_value == 1) {
                         "Lamp color changed successfully! Lamp is online."
                     } else {
                         "Lamp color changed, but the lamp might be offline."
                     }
                     Toast.makeText(onClickView.context, message, Toast.LENGTH_LONG).show()
-                } catch (e: JSONException) {
-                    Log.e(LOG_TAG, "Failed to parse response JSON", e)
-                    Toast.makeText(onClickView.context, "Lamp color changed, but failed to confirm lamp status.", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    endRequest()
+                    Log.e(LOG_TAG, "Failed to set color", e)
+                    Toast.makeText(onClickView.context, "Failed to communicate with lamp.", Toast.LENGTH_LONG).show()
                 }
             }
-
-            override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: Throwable) {
-                endRequest()
-                Log.e(LOG_TAG, "Failed to set color. Status code: $statusCode, Response: $res", t)
-                Toast.makeText(onClickView.context, getErrorMessage(statusCode), Toast.LENGTH_LONG).show()
-            }
-        })
+        }
     }
 
     fun changeAudio(commandString: String, onClickView: View) {
@@ -124,37 +107,28 @@ object QueryUtils {
         Log.d(LOG_TAG, "Changing audio with command: $commandString")
         val (deviceId, tokenId, apiUrl) = getParticleDetails(onClickView)
 
-        val url = "$apiUrl$deviceId/dfMini"
-        val params = createRequestParams(tokenId, commandString)
-        val client = AsyncHttpClient()
+        val apiService = RetrofitClient.getClient(apiUrl).create(ParticleApiService::class.java)
 
-        Log.d(LOG_TAG, "Sending POST request to URL: $url with params: $params")
-        client.post(url, params, object : TextHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<Header>, res: String) {
-                endRequest()
-                Log.i(LOG_TAG, "Audio command sent: $commandString successfully. Response: $res")
-                try {
-                    val response = JSONObject(res)
-                    val connected = response.getBoolean("connected")
-                    val returnValue = response.getInt("return_value")
-
-                    val message = if (connected && returnValue == 1) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = apiService.controlAudio(deviceId, tokenId, commandString)
+                withContext(Dispatchers.Main) {
+                    endRequest()
+                    Log.i(LOG_TAG, "Audio command sent: $commandString successfully. Response: $response")
+                    val message = if (response.connected && response.return_value == 1) {
                         "Lamp audio changed successfully! Lamp is online."
                     } else {
                         "Lamp audio changed, but the lamp might be offline."
                     }
                     Toast.makeText(onClickView.context, message, Toast.LENGTH_LONG).show()
-                } catch (e: JSONException) {
-                    Log.e(LOG_TAG, "Failed to parse response JSON", e)
-                    Toast.makeText(onClickView.context, "Lamp audio changed, but failed to confirm lamp status.", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    endRequest()
+                    Log.e(LOG_TAG, "Failed to change audio", e)
+                    Toast.makeText(onClickView.context, "Failed to communicate with lamp.", Toast.LENGTH_LONG).show()
                 }
             }
-
-            override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: Throwable) {
-                endRequest()
-                Log.e(LOG_TAG, "Failed to change audio. Status code: $statusCode, Response: $res", t)
-                Toast.makeText(onClickView.context, getErrorMessage(statusCode), Toast.LENGTH_LONG).show()
-            }
-        })
+        }
     }
 }
