@@ -40,4 +40,7 @@
     <string name="error_server">Server error. Please try again later.</string>
     <string name="error_communication_failed">Failed to communicate with lamp.</string>
     <string name="error_communication_failed_code">Failed to communicate with lamp. Error: %1$d</string>
+    <string name="test_connection">Test Connection</string>
+    <string name="msg_connection_success">Connection successful! Device is online.</string>
+    <string name="msg_connection_failed">Connection failed.</string>
 </resources>

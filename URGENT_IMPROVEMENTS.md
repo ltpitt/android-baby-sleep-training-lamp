@@ -11,15 +11,15 @@
 3. **Error Handling** - Improved error messages with specific status code handling
 4. **Thread Safety** - Fixed request serialization with volatile and synchronized methods
 5. **Network Security** - Added network security configuration enforcing HTTPS
+6. **Loading Indicators** - Added ProgressBar and UI state management during network requests
+7. **Favorite Color** - Implemented ColorPickerPopup and saving logic
+8. **Connection Testing** - Added "Test Connection" button and logic
 
 ### ⚠️ Partially Completed:
-- **Loading Indicators** - Request serialization provides feedback, but visual indicators not yet implemented
+- **Unit Tests** - Fixed MainViewModelTest by removing static Log calls. Ideally, a Logger wrapper should be used.
 
 ### ⏸️ Remaining Work:
-- Loading indicators (ProgressBar UI)
 - Encrypted settings storage
-- Connection testing feature
-- Favorite color functionality improvements
 - Deprecated API updates
 
 ---
@@ -125,18 +125,16 @@ override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: 
 
 ---
 
-### 4. Missing Loading Indicators
+### 4. ✅ Loading Indicators - COMPLETED
 **Impact:** Poor UX - users don't know if app is working
 **Effort:** 1-2 hours
 **Files:** `MainActivity.kt`, `activity_main.xml`
-**Status:** ⚠️ PARTIALLY ADDRESSED (request serialization prevents multiple simultaneous requests)
+**Status:** ✅ FIXED
 
-**Current State:**
-- Request serialization flag prevents multiple simultaneous requests
-- User receives "Please wait, request is already in progress" message
-- Full loading indicators (ProgressBar in UI) not yet implemented
-
-**Note:** While full UI loading indicators are not implemented, the thread-safe request serialization provides basic feedback to users that a request is in progress.
+**Changes Applied:**
+- Added `ProgressBar` to `activity_main.xml`
+- Implemented `isLoading` LiveData in `MainViewModel`
+- Updated `MainActivity` to show/hide progress bar and disable UI interactions during loading
 
 ---
 
@@ -278,84 +276,29 @@ private fun getEncryptedSharedPreferences(): SharedPreferences {
 
 ---
 
-### 9. No Connection Testing
+### 9. ✅ Connection Testing - COMPLETED
 **Impact:** Users can't verify settings before saving
 **Effort:** 2 hours
-**Files:** `MainActivity.kt`, `QueryUtils.kt`, `activity_main.xml`
-**Status:** ⏸️ NOT ADDRESSED (Out of scope for critical fixes - enhancement for future)
+**Files:** `MainActivity.kt`, `MainViewModel.kt`, `activity_main.xml`
+**Status:** ✅ FIXED
 
-**Add:**
-- "Test Connection" button in settings
-- Shows connection status (online/offline)
-- Validates credentials before saving
-
-```kotlin
-private fun testConnection() {
-    showLoading(true)
-    
-    val url = binding.particleApiUrlField.text.toString()
-    val deviceId = binding.particleDeviceIdField.text.toString()
-    val token = binding.particleTokenIdField.text.toString()
-    
-    QueryUtils.testConnection(url, deviceId, token) { success, message ->
-        showLoading(false)
-        
-        val resultMessage = if (success) {
-            "✓ Connection successful! Device is online."
-        } else {
-            "✗ Connection failed: $message"
-        }
-        
-        Toast.makeText(this, resultMessage, Toast.LENGTH_LONG).show()
-    }
-}
-```
+**Changes Applied:**
+- Added "Test Connection" button to settings UI
+- Implemented `testConnection` in `MainViewModel`
+- Wired up button to trigger test and show result Toast
 
 ---
 
-### 10. Incomplete Favorite Color Feature
+### 10. ✅ Favorite Color Feature - COMPLETED
 **Impact:** Feature exists but doesn't work properly
 **Effort:** 1-2 hours
 **Files:** `MainActivity.kt`
-**Status:** ⏸️ NOT ADDRESSED (Out of scope for critical fixes - enhancement for future)
+**Status:** ✅ FIXED
 
-**Issues:**
-- Button doesn't show color picker
-- Color not properly saved/loaded
-- No visual feedback
-
-**Fix:**
-```kotlin
-binding.favouriteColorButton.setOnClickListener {
-    // Show color picker dialog
-    ColorPickerDialog.Builder(this)
-        .setTitle("Choose Favorite Color")
-        .setPositiveButton("Select") { _, selectedColor, _ ->
-            saveFavoriteColor(selectedColor)
-            updateFavoriteColorButton(selectedColor)
-        }
-        .setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-        .show()
-}
-
-private fun saveFavoriteColor(color: Int) {
-    getSharedPreferences("SETTINGS", Context.MODE_PRIVATE).edit().apply {
-        putString("favouriteColor", color.toString())
-        apply()
-    }
-}
-
-private fun updateFavoriteColorButton(color: Int) {
-    binding.favouriteColorButton.setBackgroundColor(color)
-    binding.favouriteColorButton.setTextColor(
-        if (isColorDark(color)) Color.WHITE else Color.BLACK
-    )
-    binding.favouriteColorField.setText(color.toString())
-    binding.favouriteColorField.setTextColor(color)
-}
-```
+**Changes Applied:**
+- Integrated `ColorPickerPopup`
+- Implemented saving and loading of favorite color
+- Updated UI to reflect selected color
 
 ---
 

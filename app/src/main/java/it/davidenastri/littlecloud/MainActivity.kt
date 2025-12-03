@@ -1,5 +1,6 @@
 package it.davidenastri.littlecloud
 
+import top.defaults.colorpicker.ColorPickerPopup
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -20,12 +21,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import it.davidenastri.littlecloud.databinding.ActivityMainBinding
 import it.davidenastri.littlecloud.viewmodel.MainViewModel
+import it.davidenastri.littlecloud.viewmodel.MainViewModelFactory
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory(application)
+    }
     
     private var currentVolume = 0
     private var isPlaying = false
@@ -150,6 +154,46 @@ class MainActivity : AppCompatActivity() {
             musicPlayer.visibility = View.GONE
             settingsForm.visibility = View.VISIBLE
 
+            favouriteColorButton.setOnClickListener {
+                val currentColorStr = favouriteColorField.text.toString()
+                val initialColor = if (currentColorStr.isNotEmpty()) {
+                    try {
+                        currentColorStr.toInt()
+                    } catch (e: Exception) {
+                        Color.RED
+                    }
+                } else {
+                    Color.RED
+                }
+
+                ColorPickerPopup.Builder(this@MainActivity)
+                    .initialColor(initialColor)
+                    .enableBrightness(true)
+                    .enableAlpha(false)
+                    .okTitle("Choose")
+                    .cancelTitle("Cancel")
+                    .showIndicator(true)
+                    .showValue(false)
+                    .build()
+                    .show(it, object : ColorPickerPopup.ColorPickerObserver() {
+                        override fun onColorPicked(color: Int) {
+                            favouriteColorField.setText(color.toString())
+                            favouriteColorField.setTextColor(color)
+                            favouriteColorButton.setBackgroundColor(color)
+                            favouriteColorButton.setTextColor(if (isColorDark(color)) Color.WHITE else Color.BLACK)
+                        }
+                    })
+            }
+
+            testConnectionButton.setOnClickListener {
+                if (validateSettings()) {
+                    viewModel.particleApiUrl = particleApiUrlField.text.toString()
+                    viewModel.particleDeviceId = particleDeviceIdField.text.toString()
+                    viewModel.particleTokenId = particleTokenIdField.text.toString()
+                    viewModel.testConnection()
+                }
+            }
+
             fabButton.apply {
                 hide()
                 backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_green_dark))
@@ -254,12 +298,22 @@ class MainActivity : AppCompatActivity() {
         }
         
         viewModel.isLoading.observe(this) { isLoading ->
-            // TODO: Show/Hide loading indicator if you have one
-            if (isLoading) {
-                // binding.progressBar.visibility = View.VISIBLE
-            } else {
-                // binding.progressBar.visibility = View.GONE
-            }
+            binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.fabButton.isEnabled = !isLoading
+            binding.colorPicker.isEnabled = !isLoading
+            
+            // Disable inputs in settings form
+            binding.particleApiUrlField.isEnabled = !isLoading
+            binding.particleDeviceIdField.isEnabled = !isLoading
+            binding.particleTokenIdField.isEnabled = !isLoading
+            binding.favouriteColorButton.isEnabled = !isLoading
+            binding.testConnectionButton.isEnabled = !isLoading
+            
+            // Disable music controls
+            binding.previousSongButton.isEnabled = !isLoading
+            binding.playPauseSongButton.isEnabled = !isLoading
+            binding.nextSongButton.isEnabled = !isLoading
+            binding.volumeSeekbar.isEnabled = !isLoading
         }
     }
 

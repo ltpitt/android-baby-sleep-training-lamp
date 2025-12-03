@@ -4,9 +4,9 @@ import it.davidenastri.littlecloud.network.ParticleApiService
 import it.davidenastri.littlecloud.network.ParticleResponse
 import it.davidenastri.littlecloud.network.RetrofitClient
 
-class ParticleRepository {
+open class ParticleRepository {
 
-    suspend fun setColor(apiUrl: String, deviceId: String, token: String, rgbString: String): Result<ParticleResponse> {
+    open suspend fun setColor(apiUrl: String, deviceId: String, token: String, rgbString: String): Result<ParticleResponse> {
         return try {
             val apiService = RetrofitClient.getClient(apiUrl).create(ParticleApiService::class.java)
             val response = apiService.setColor(deviceId, token, rgbString)
@@ -16,7 +16,7 @@ class ParticleRepository {
         }
     }
 
-    suspend fun controlAudio(apiUrl: String, deviceId: String, token: String, command: String): Result<ParticleResponse> {
+    open suspend fun controlAudio(apiUrl: String, deviceId: String, token: String, command: String): Result<ParticleResponse> {
         return try {
             val apiService = RetrofitClient.getClient(apiUrl).create(ParticleApiService::class.java)
             val response = apiService.controlAudio(deviceId, token, command)
