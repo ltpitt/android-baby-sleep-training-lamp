@@ -8,8 +8,10 @@ android-baby-sleep-training-lamp/
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/it/davidenastri/littlecloud/
-│   │   │   │   ├── MainActivity.kt          # Main UI logic
-│   │   │   │   └── QueryUtils.kt            # Particle API communication
+│   │   │   │   └── MainActivity.kt          # Main UI logic
+│   │   │   │   └── viewmodel/               # ViewModel classes
+│   │   │   │   └── repository/              # Data repositories
+│   │   │   │   └── network/                 # Network API services
 │   │   │   ├── res/
 │   │   │   │   ├── layout/
 │   │   │   │   │   └── activity_main.xml    # Main UI layout
@@ -127,7 +129,6 @@ Location: `build.gradle`
 // Example: Testing with mocks
 @Test
 fun testColorValidation() {
-    val utils = QueryUtils
     // Test validation logic
     assertTrue(isValidRgbString("255,128,64,1000"))
     assertFalse(isValidRgbString("300,128,64,1000"))
@@ -321,7 +322,13 @@ fun tearDown() {
          ↓
          
 ┌─────────────────┐
-│   QueryUtils    │  ← Network Layer (AsyncHttpClient)
+│  MainViewModel  │  ← State Management
+└────────┬────────┘
+         │
+         ↓
+
+┌─────────────────┐
+│   Repository    │  ← Data Layer
 └────────┬────────┘
          │
          ↓
@@ -344,22 +351,23 @@ fun tearDown() {
 1. **Color Change**:
    - User picks color in ColorPickerView
    - MainActivity converts to RGB string
-   - QueryUtils sends POST to Particle API
+   - MainViewModel calls Repository
+   - Repository sends POST to Particle API
    - API forwards to lamp hardware
    - Lamp changes LED color
 
 2. **Music Control**:
    - User presses play/pause/next/previous
-   - MainActivity sends command to QueryUtils
-   - QueryUtils posts to Particle dfMini endpoint
+   - MainActivity sends command to MainViewModel
+   - Repository posts to Particle dfMini endpoint
    - Lamp controls DFPlayer Mini module
    - Audio plays through speaker
 
 3. **Settings**:
    - User enters API credentials
    - MainActivity validates input
-   - Saves to SharedPreferences
-   - QueryUtils reads on each API call
+   - Saves to EncryptedSharedPreferences via ViewModel
+   - Repository reads on each API call
 
 ## Quick Reference: Key Classes
 
@@ -374,13 +382,19 @@ fun tearDown() {
 - `setupColorPicker()` - Configures color picker
 - `saveSettings()` - Persists settings
 
-### QueryUtils.kt
-**Purpose**: Particle API communication
+### MainViewModel.kt
+**Purpose**: Manages UI state and business logic
 **Key Methods**:
-- `changeColor(rgbString, colorSet, view)` - Send color to lamp
-- `changeAudio(commandString, view)` - Send audio command
-- `getParticleDetails(view)` - Load credentials
-- `createRequestParams(tokenId, args)` - Build API params
+- `changeColor(rgbString, colorSet)` - Send color to lamp
+- `changeAudio(commandString)` - Send audio command
+- `saveSettings(...)` - Persist credentials securely
+- `testConnection()` - Verify API connectivity
+
+### ParticleRepository.kt
+**Purpose**: Data layer for Particle API
+**Key Methods**:
+- `setColor(...)` - API call to set color
+- `controlAudio(...)` - API call for audio control
 
 ## Resources
 

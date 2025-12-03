@@ -30,9 +30,21 @@
                         │
                         ▼
         ┌───────────────────────────────┐
-        │        QueryUtils.kt           │
-        │    (API Communication)         │
-        └───────────────┬───────────────┘
+        │        MainViewModel.kt        │
+        │        (State Holder)          │
+        └────────────────────────────────┘
+                        │
+                        ▼
+        ┌────────────────────────────────┐
+        │     ParticleRepository.kt      │
+        │        (Data Layer)            │
+        └────────────────────────────────┘
+                        │
+                        ▼
+        ┌────────────────────────────────┐
+        │     ParticleApiService.kt      │
+        │      (Retrofit Interface)      │
+        └────────────────────────────────┘
                         │
                         ▼
         ┌───────────────────────────────┐
@@ -225,7 +237,7 @@ USER INTERACTION
        │
        ▼
 ┌─────────────┐
-│  Network    │  ← QueryUtils.kt
+│  Network    │  ← ParticleRepository.kt / Retrofit
 │  Layer      │    • AsyncHttpClient
 └──────┬──────┘    ⚠️ OLD LIBRARY
        │

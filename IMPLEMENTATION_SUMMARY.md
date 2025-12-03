@@ -39,10 +39,10 @@ This document summarizes the critical fixes applied to the Little Cloud Android 
 ---
 
 ### 3. Error Handling (HIGH) ✅
-**File:** `app/src/main/java/it/davidenastri/littlecloud/QueryUtils.kt`  
+**File:** `app/src/main/java/it/davidenastri/littlecloud/viewmodel/MainViewModel.kt`  
 **Impact:** Better user experience with specific error messages  
 **Changes:**
-- Created `getErrorMessage()` function for consistent error messages
+- Implemented `handleError()` function for consistent error messages
 - Added specific error handling for:
   - 0: "No network connection. Please check your internet."
   - 401: "Invalid access token. Please check settings."
@@ -57,14 +57,12 @@ This document summarizes the critical fixes applied to the Little Cloud Android 
 ---
 
 ### 4. Thread Safety (HIGH) ✅
-**File:** `app/src/main/java/it/davidenastri/littlecloud/QueryUtils.kt`  
+**File:** `app/src/main/java/it/davidenastri/littlecloud/viewmodel/MainViewModel.kt`  
 **Impact:** Prevents race conditions in concurrent requests  
 **Changes:**
-- Made `isRequestInProgress` volatile for thread visibility
-- Added `@Synchronized` methods:
-  - `startRequest()`: Atomically checks and sets request flag
-  - `endRequest()`: Atomically clears request flag
-- Updated `changeColor()` and `changeAudio()` to use new methods
+- Implemented `isLoading` LiveData to manage request state
+- UI disables interactions while request is in progress
+- Coroutines ensure structured concurrency
 
 **Result:** Thread-safe request serialization preventing multiple simultaneous requests
 
@@ -88,14 +86,12 @@ This document summarizes the critical fixes applied to the Little Cloud Android 
 
 ## ⚠️ Partially Completed
 
-### Loading Indicators (HIGH) ⚠️
-**Status:** Request serialization implemented, visual indicators pending  
+### Loading Indicators (HIGH) ✅
+**Status:** Completed
 **Current State:**
-- Request serialization prevents multiple simultaneous requests
-- Users see "Please wait, request is already in progress" message
-- Full UI progress indicators (ProgressBar) not yet implemented
-
-**Future Work:** Add visual ProgressBar to activity_main.xml and show/hide during network operations
+- `ProgressBar` added to `activity_main.xml`
+- `MainViewModel` exposes `isLoading` state
+- `MainActivity` observes state to show/hide progress and disable UI
 
 ---
 
@@ -103,11 +99,11 @@ This document summarizes the critical fixes applied to the Little Cloud Android 
 
 The following improvements were identified but deferred as they are enhancements rather than critical fixes:
 
-1. **Encrypted Settings Storage** - Access tokens currently stored in plain text SharedPreferences
-2. **Connection Testing** - No test connection button to verify settings
-3. **Favorite Color Feature** - Button exists but functionality incomplete
-4. **Deprecated Test APIs** - Test APIs need updating
-5. **Loading Indicators UI** - Visual progress bars not implemented
+1. **Encrypted Settings Storage** - ✅ Completed
+2. **Connection Testing** - ✅ Completed
+3. **Favorite Color Feature** - ✅ Completed
+4. **Deprecated Test APIs** - ✅ Completed
+5. **Loading Indicators UI** - ✅ Completed
 
 ---
 
