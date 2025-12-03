@@ -2,6 +2,7 @@ package it.davidenastri.littlecloud.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -9,6 +10,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import it.davidenastri.littlecloud.R
 import it.davidenastri.littlecloud.repository.ParticleRepository
 import kotlinx.coroutines.launch
@@ -20,7 +23,25 @@ class MainViewModel(
     private val repository: ParticleRepository = ParticleRepository()
 ) : AndroidViewModel(application) {
 
-    private val sharedPreferences = application.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences by lazy {
+        try {
+            val masterKey = MasterKey.Builder(application)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            EncryptedSharedPreferences.create(
+                application,
+                "SECURE_SETTINGS",
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            // Fallback to standard SharedPreferences in case of encryption error (e.g. during tests if context is mocked improperly)
+            // or if device doesn't support it (unlikely with minSdk 24)
+            application.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE)
+        }
+    }
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage

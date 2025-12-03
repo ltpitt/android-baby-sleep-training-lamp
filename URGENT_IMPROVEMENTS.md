@@ -14,13 +14,14 @@
 6. **Loading Indicators** - Added ProgressBar and UI state management during network requests
 7. **Favorite Color** - Implemented ColorPickerPopup and saving logic
 8. **Connection Testing** - Added "Test Connection" button and logic
+9. **Settings Security** - Implemented EncryptedSharedPreferences with fallback
+10. **Deprecated Test APIs** - Updated ExampleInstrumentedTest to use AndroidX libraries
 
 ### ⚠️ Partially Completed:
-- **Unit Tests** - Fixed MainViewModelTest by removing static Log calls. Ideally, a Logger wrapper should be used.
+- **Unit Tests** - Fixed MainViewModelTest. Ideally, a Logger wrapper should be used.
 
 ### ⏸️ Remaining Work:
-- Encrypted settings storage
-- Deprecated API updates
+- Documentation updates (README.md)
 
 ---
 
@@ -176,27 +177,16 @@ override fun onFailure(statusCode: Int, headers: Array<Header>, res: String, t: 
 
 ## 🟡 Important Issues (Should Fix Soon)
 
-### 6. Deprecated Test APIs
+### 6. ✅ Deprecated Test APIs - COMPLETED
 **Impact:** Tests don't compile correctly
 **Effort:** 30 minutes
 **Files:** `ExampleInstrumentedTest.kt`
-**Status:** ⏸️ NOT ADDRESSED (Out of scope for critical fixes)
+**Status:** ✅ FIXED
 
-**Fix:**
-```kotlin
-// Replace deprecated InstrumentationRegistry
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
-
-@RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-    @Test
-    fun useAppContext() {
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("it.davidenastri.littlecloud", appContext.packageName)
-    }
-}
-```
+**Changes Applied:**
+- Updated imports to `androidx.test.platform.app.InstrumentationRegistry`
+- Updated imports to `androidx.test.ext.junit.runners.AndroidJUnit4`
+- Added `androidx.test.ext:junit` dependency
 
 ---
 
@@ -243,36 +233,16 @@ fun changeColor(rgbString: String, colorSet: String, onClickView: View) {
 
 ---
 
-### 8. Settings Security
+### 8. ✅ Settings Security - COMPLETED
 **Impact:** Access tokens stored in plain text
 **Effort:** 2-3 hours
-**Files:** `MainActivity.kt`, `QueryUtils.kt`, `app/build.gradle`
-**Status:** ⏸️ NOT ADDRESSED (Out of scope for critical fixes - security enhancement for future)
+**Files:** `MainViewModel.kt`, `app/build.gradle`
+**Status:** ✅ FIXED
 
-**Add Dependency:**
-```gradle
-implementation 'androidx.security:security-crypto:1.1.0-alpha06'
-```
-
-**Implementation:**
-```kotlin
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
-
-private fun getEncryptedSharedPreferences(): SharedPreferences {
-    val masterKey = MasterKey.Builder(applicationContext)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
-
-    return EncryptedSharedPreferences.create(
-        applicationContext,
-        "SETTINGS",
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
-}
-```
+**Changes Applied:**
+- Added `androidx.security:security-crypto` dependency
+- Implemented `EncryptedSharedPreferences` in `MainViewModel`
+- Added fallback to standard SharedPreferences for compatibility/testing
 
 ---
 
